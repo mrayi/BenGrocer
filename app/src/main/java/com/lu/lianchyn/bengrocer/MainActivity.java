@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         // Mrayi
+        //cb leo lim haha
         email = String.valueOf(etUser.getText());
         password = String.valueOf(etPass.getText());
         if(email == null || email.isEmpty()) {
