@@ -3,6 +3,7 @@
     <string name="email">E-mail</string>
     <string name="password">Password</string>
     <string name="log_in">LOG IN</string>
+    <string name="search">Search...</string>
 
     <!-- temp -->
     <string name="manager">Manager</string>
