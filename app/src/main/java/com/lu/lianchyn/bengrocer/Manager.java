@@ -19,6 +19,16 @@ public class Manager extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager);
 
+        initViewPager();
+
+        initTabHost();
+
+    }
+
+    private void initTabHost() {
+    }
+
+    private void initViewPager() {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
 
         List<Fragment> listFragments = new ArrayList<Fragment>();
@@ -30,7 +40,6 @@ public class Manager extends AppCompatActivity {
         MyFragmentPagerAdapter myFragmentPagerAdapter = new MyFragmentPagerAdapter(
                 getSupportFragmentManager(), listFragments);
         viewPager.setAdapter(myFragmentPagerAdapter);
-
     }
 
     @Override
