@@ -73,7 +73,7 @@ public class MemberFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-
+    /*
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -84,7 +84,7 @@ public class MemberFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }
-
+    */
     @Override
     public void onDetach() {
         super.onDetach();

@@ -3,10 +3,13 @@
     <string name="email">E-mail</string>
     <string name="password">Password</string>
     <string name="log_in">LOG IN</string>
+
+    <!-- temp -->
     <string name="manager">Manager</string>
     <string name="inventory_staff">Inventory Staff</string>
     <string name="cashier">Cashier</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="staff">Staff</string>
+    <string name="member">Member</string>
+    <string name="stock">Stock</string>
+    <string name="pos">Pos</string>
 </resources>
