@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Please check your internet connection.", Toast.LENGTH_LONG).show();
             return;
         }
-        
+        // Mrayi
         email = String.valueOf(etUser.getText());
         password = String.valueOf(etPass.getText());
         if(email == null || email.isEmpty()) {
