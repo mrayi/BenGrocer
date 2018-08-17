@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">BenGrocer</string>
+    <string name="email">E-mail</string>
+    <string name="password">Password</string>
+    <string name="log_in">LOG IN</string>
+    <string name="manager">Manager</string>
+    <string name="inventory_staff">Inventory Staff</string>
+    <string name="cashier">Cashier</string>
+</resources>
