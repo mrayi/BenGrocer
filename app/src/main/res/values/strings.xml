@@ -12,4 +12,7 @@
     <string name="member">Member</string>
     <string name="stock">Stock</string>
     <string name="pos">Pos</string>
+    <string name="StockBtn">Stock</string>
+    <string name="ReportBtn">Report</string>
+    <string name="SupplierBtn">Supplier</string>
 </resources>
