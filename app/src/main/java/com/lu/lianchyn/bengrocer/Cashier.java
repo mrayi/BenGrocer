@@ -1,6 +1,7 @@
 package com.lu.lianchyn.bengrocer;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -10,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Cashier extends AppCompatActivity {
 
@@ -44,7 +47,12 @@ public class Cashier extends AppCompatActivity {
                     Toast.makeText(Cashier.this,"About Us",Toast.LENGTH_SHORT).show();
                 }
                 else if(id == R.id.logout){
-                    Toast.makeText(Cashier.this,"LogOut",Toast.LENGTH_SHORT).show();
+                    FirebaseAuth.getInstance().signOut();
+
+                    Intent i = new Intent(Cashier.this, MainActivity.class);
+                    startActivity(i);
+                    Toast.makeText(Cashier.this,"Logged Out", Toast.LENGTH_LONG).show();
+
                 }
 
                 return true;

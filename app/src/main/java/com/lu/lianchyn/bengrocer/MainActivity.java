@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -42,6 +43,53 @@ public class MainActivity extends AppCompatActivity {
         etUser = (EditText) findViewById(R.id.email);
         etPass = (EditText) findViewById(R.id.password);
         btLogin = (Button) findViewById(R.id.login);
+
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user!=null) {
+            DocumentReference docRef = db.collection("Staff").document(user.getUid());
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Intent i;
+
+                            String position = (String) document.get("Position");
+                            switch(position){
+                                case "Manager":
+                                    i = new Intent(MainActivity.this, Manager.class);
+                                    startActivity(i);
+                                    finish();
+                                    break;
+
+                                case "Inventory Staff":
+                                    i = new Intent(MainActivity.this, InventoryStaff.class);
+                                    startActivity(i);
+                                    finish();
+                                    break;
+
+                                case "Cashier":
+                                    i = new Intent(MainActivity.this, Cashier.class);
+                                    startActivity(i);
+                                    finish();
+                                    break;
+
+                            }
+
+                        } else {
+                            Toast.makeText(MainActivity.this, "22222",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "333333",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+
     }
 
     public void login(View v) {

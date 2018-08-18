@@ -1,6 +1,7 @@
 package com.lu.lianchyn.bengrocer;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTabHost;
@@ -11,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Manager extends AppCompatActivity {
     // Fragment TabHost as mTabHost
@@ -46,7 +49,12 @@ public class Manager extends AppCompatActivity {
                     Toast.makeText(Manager.this,"About Us",Toast.LENGTH_SHORT).show();
                 }
                 else if(id == R.id.logout){
-                    Toast.makeText(Manager.this,"LogOut",Toast.LENGTH_SHORT).show();
+                    FirebaseAuth.getInstance().signOut();
+
+                    Intent i = new Intent(Manager.this, MainActivity.class);
+                    startActivity(i);
+                    Toast.makeText(Manager.this,"Logged Out", Toast.LENGTH_LONG).show();
+
                 }
 
                 return true;
