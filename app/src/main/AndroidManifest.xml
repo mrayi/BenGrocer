@@ -18,7 +18,8 @@
         </activity>
         <activity android:name=".Manager" />
         <activity android:name=".InventoryStaff" />
-        <activity android:name=".Cashier"></activity>
+        <activity android:name=".Cashier" />
+        <activity android:name=".Profile"></activity>
     </application>
 
 </manifest>

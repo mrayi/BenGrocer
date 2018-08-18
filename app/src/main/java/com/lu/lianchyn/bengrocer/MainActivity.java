@@ -21,6 +21,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -31,6 +33,14 @@ public class MainActivity extends AppCompatActivity {
     private Button btLogin;
     private String email;
     private String password;
+
+    public static String name;
+    public static String position;
+    public static String icno;
+    public static String salary;
+    public static String sid;
+    public static String address;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             Intent i;
+
+                            name = (String) document.get("Name");
+                            position = (String) document.get("Position");
+                            icno = (String) document.get("IC_NO");
+                            salary = (String) document.get("Salary").toString();
+                            sid = (String) document.get("sid");
+                            address = (String) document.get("Address");
 
                             String position = (String) document.get("Position");
                             switch(position){
@@ -129,6 +146,13 @@ public class MainActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
+
+                                            name = (String) document.get("Name");
+                                            position = (String) document.get("Position");
+                                            icno = (String) document.get("IC_NO");
+                                            salary = (String) document.get("Salary").toString();
+                                            sid = (String) document.get("sid");
+                                            address = (String) document.get("Address");
                                             // Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                                             Intent i;
                                             String position = (String) document.get("Position");

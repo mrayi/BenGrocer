@@ -39,7 +39,9 @@ public class InventoryStaff extends AppCompatActivity {
                 int id = item.getItemId();
 
                 if(id == R.id.profile){
-                    Toast.makeText(InventoryStaff.this,"Profile",Toast.LENGTH_SHORT).show();
+
+                    Intent i = new Intent(InventoryStaff.this, Profile.class);
+                    startActivity(i);
                 }
 
 
