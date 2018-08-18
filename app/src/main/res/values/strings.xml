@@ -5,6 +5,7 @@
     <string name="email">E-mail</string>
     <string name="password">Password</string>
     <string name="log_in">LOG IN</string>
+    <string name="search">Search...</string>
 
     <!-- temp -->
     <string name="manager">Manager</string>
@@ -14,4 +15,10 @@
     <string name="member">Member</string>
     <string name="stock">Stock</string>
     <string name="pos">Pos</string>
+    <string name="StockBtn">Stock</string>
+    <string name="ReportBtn">Report</string>
+    <string name="SupplierBtn">Supplier</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
