@@ -58,12 +58,12 @@ public class MainActivity extends AppCompatActivity {
 
                             String position = (String) document.get("Position");
                             switch(position){
-                                case "Manager":
+                                /*case "Manager":
                                     i = new Intent(MainActivity.this, Manager.class);
                                     startActivity(i);
                                     finish();
                                     break;
-
+*/
                                 case "Inventory Staff":
                                     i = new Intent(MainActivity.this, InventoryStaff.class);
                                     startActivity(i);
