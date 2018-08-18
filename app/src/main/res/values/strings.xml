@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">BenGrocer</string>
+    <string name="Open">BenGrocer</string>
+    <string name="Close">BenGrocer</string>
     <string name="email">E-mail</string>
     <string name="password">Password</string>
     <string name="log_in">LOG IN</string>
