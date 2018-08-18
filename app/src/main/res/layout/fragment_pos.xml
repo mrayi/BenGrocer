@@ -37,77 +37,46 @@
 
         <TextView
             android:id="@+id/textViewStaffID"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:labelFor="@id/editTextStaffID"
-            android:text="@string/StaffID" />
+            android:text="@string/StaffID"
+            android:textSize="12sp"
+            android:layout_width="0dp"
+            app:layout_gravity="fill"
+            app:layout_columnWeight="1" />
 
         <TextView
             android:id="@+id/textViewStaffName"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:labelFor="@id/editTextStaffName"
-            android:text="@string/StaffName" />
+            android:text="@string/StaffName"
+            android:textSize="12sp"
+            android:layout_width="0dp"
+            app:layout_gravity="fill"
+            app:layout_columnWeight="1" />
 
         <EditText
             android:id="@+id/editTextStaffID"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:clickable="true"
+            android:editable="false"
             android:ems="10"
             android:inputType="none"
-            android:editable="false"
-            />
+            android:textSize="12sp"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill" />
 
         <EditText
             android:id="@+id/editTextStaffName"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:editable="false"
             android:ems="10"
             android:inputType="none"
-            android:editable="false"/>
-
-    </android.support.v7.widget.GridLayout>
-
-    <android.support.v7.widget.GridLayout
-        android:id="@+id/gridLayoutMember"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:columnCount="2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gridLayoutCashier"
-        app:rowCount="2">
-
-        <TextView
-            android:id="@+id/textViewMemberID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/editTextMemberID"
-            android:text="@string/MemberID" />
-
-        <TextView
-            android:id="@+id/textViewMemberName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/editTextMemberName"
-            android:text="@string/MemberName" />
-
-        <EditText
-            android:id="@+id/editTextMemberID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName" />
-
-        <EditText
-            android:id="@+id/editTextMemberName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName" />
+            android:textSize="12sp"
+            android:layout_width="0dp"
+            app:layout_gravity="fill"
+            app:layout_columnWeight="1" />
 
     </android.support.v7.widget.GridLayout>
 
@@ -121,7 +90,60 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gridLayoutMember">
+        app:layout_constraintTop_toBottomOf="@+id/gridLayoutCashier">
+
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/gridLayoutMember"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            app:columnCount="2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gridLayoutCashier"
+            app:rowCount="2">
+
+            <TextView
+                android:id="@+id/textViewMemberName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/editTextMemberName"
+                android:text="@string/MemberName"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/textViewMemberID"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/editTextMemberID"
+                android:text="@string/MemberID"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                android:textSize="12sp"/>
+
+            <EditText
+                android:id="@+id/editTextMemberID"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                android:textSize="12sp"/>
+
+            <EditText
+                android:id="@+id/editTextMemberName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                android:textSize="12sp"/>
+
+        </android.support.v7.widget.GridLayout>
 
         <Button
             android:id="@+id/buttonScan"
@@ -134,7 +156,7 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="286dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -162,6 +184,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/Clear" />
+
+        <Button
+            android:id="@+id/buttonAdd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/Add" />
 
         <Button
             android:id="@+id/buttonPay"
