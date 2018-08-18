@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.Toolbar;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -147,6 +148,19 @@ public class StaffFragment extends Fragment {
                 }
                 return true;
            }
+        });
+
+        lstView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
+            {
+                for(int a = 0; a < arg0.getChildCount(); a++)
+                {
+                    arg0.getChildAt(a).setBackgroundColor(Color.TRANSPARENT);
+                }
+
+                arg1.setBackgroundColor(Color.GREEN);
+            }
         });
 
         return v;
