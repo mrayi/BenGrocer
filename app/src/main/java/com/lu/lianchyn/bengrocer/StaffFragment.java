@@ -173,7 +173,7 @@ public class StaffFragment extends Fragment {
                 if(newText != null && !newText.isEmpty()) {
                     List<String> lstFound = new ArrayList<String>();
                     for(String item:lstSource) {
-                        if(item.contains(newText))
+                        if(item.toLowerCase().contains(newText.toLowerCase()))
                             lstFound.add(item);
                     }
 
