@@ -39,7 +39,8 @@ public class Cashier extends AppCompatActivity {
                 int id = item.getItemId();
 
                 if(id == R.id.profile){
-                    Toast.makeText(Cashier.this,"Profile",Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(Cashier.this, Profile.class);
+                    startActivity(i);
                 }
 
 
