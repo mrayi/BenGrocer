@@ -1,11 +1,10 @@
-//noinspection GradleCompatible
 apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.lu.lianchyn.bengrocer"
-        minSdkVersion 23
+        minSdkVersion 22
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -31,6 +30,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.google.firebase:firebase-auth:16.0.3'
     implementation 'com.google.firebase:firebase-firestore:17.0.4'
+    implementation 'com.android.support:gridlayout-v7:27.1.1'
     implementation 'com.miguelcatalan:materialsearchview:1.4.0'
     implementation 'com.android.support:design:27.1.0'
 }

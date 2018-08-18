@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">BenGrocer</string>
+    <string name="Open">BenGrocer</string>
+    <string name="Close">BenGrocer</string>
     <string name="email">E-mail</string>
     <string name="password">Password</string>
     <string name="log_in">LOG IN</string>
@@ -13,6 +15,14 @@
     <string name="member">Member</string>
     <string name="stock">Stock</string>
     <string name="pos">Pos</string>
+    <string name="MemberID">Mamber ID</string>
+    <string name="MemberName">Member Name</string>
+    <string name="StaffID">Staff ID</string>
+    <string name="StaffName">Staff Name</string>
+    <string name="Clear">Clear</string>
+    <string name="Pay">Pay</string>
+    <string name="ScanID">Scan ID</string>
+    <string name="POSSystem">POS System</string>
     <string name="StockBtn">Stock</string>
     <string name="ReportBtn">Report</string>
     <string name="SupplierBtn">Supplier</string>
