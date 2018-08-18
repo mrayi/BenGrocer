@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">BenGrocer</string>
+    <string name="Open">BenGrocer</string>
+    <string name="Close">BenGrocer</string>
     <string name="email">E-mail</string>
     <string name="password">Password</string>
     <string name="log_in">LOG IN</string>
+    <string name="search">Search...</string>
 
     <!-- temp -->
     <string name="manager">Manager</string>
@@ -20,4 +23,10 @@
     <string name="Pay">Pay</string>
     <string name="ScanID">Scan ID</string>
     <string name="POSSystem">POS System</string>
+    <string name="StockBtn">Stock</string>
+    <string name="ReportBtn">Report</string>
+    <string name="SupplierBtn">Supplier</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
