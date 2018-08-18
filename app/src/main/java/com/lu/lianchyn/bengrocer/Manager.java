@@ -21,7 +21,7 @@ public class Manager extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       /* setContentView(R.layout.activity_manager);
+        setContentView(R.layout.activity_manager);
         dl = (DrawerLayout)findViewById(R.id.dl);
         abdt = new ActionBarDrawerToggle(this,dl,R.string.Open,R.string.Close);
         abdt.setDrawerIndicatorEnabled(true);
@@ -52,7 +52,7 @@ public class Manager extends AppCompatActivity {
                 return true;
             }
         });
-*/
+
 
         mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
@@ -66,12 +66,12 @@ public class Manager extends AppCompatActivity {
         mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
                 PosFragment.class, null);
     }
-/*
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         return  abdt.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
-    */
+
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
