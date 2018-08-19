@@ -46,21 +46,32 @@
     <string name="ReportBtn">Report</string>
     <string name="SupplierBtn">Supplier</string>
     <string name="sid">sid</string>
+    <string name="submit">Submit</string>
+    <string name="reset">Reset</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Add">Add</string>
+    <string name="title_activity_stock_mgmt">StockMgmt</string>
+    <string name="StockName">Name</string>
+    <string name="Barcode">Barcode</string>
+    <string name="StockDescription">Description</string>
+    <string name="Quantity">Quanitity</string>
+    <string name="Price">Price</string>
+    <string name="Category">Category</string>
+    <string name="SupName">Supplier Name</string>
+    <string name="done">Done</string>
     <string name="Remove">Remove</string>
     <string name="Insert">Insert</string>
     <string name="Total">Total:</string>
     <string name="InsertItemID">Insert Item ID</string>
-    <string name="Quantity">Quantity</string>
     <string name="ItemID">Item ID</string>
     <string name="ItemName">Item Name</string>
     <string name="ItemQuantity">Qty</string>
-    <string name="Price">Price (RM)</string>
+    <string name="Price1">Price (RM)</string>
     <string name="SubTotal">Sub Total</string>
     <string name="userPayAmount">User Pay Amount</string>
     <string name="RM">(RM)</string>
-    <string name="Barcode">Barcode</string>
+    <string name="Save">Save</string>
+    <string name="Delete">Delete</string>
 </resources>
