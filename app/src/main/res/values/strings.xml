@@ -12,6 +12,7 @@
     <string name="name">Name</string>
     <string name="position">Position</string>
     <string name="salary">Salary</string>
+    <string name="create_staff">Create Staff</string>
     <string name="exp_email">e.g. abc@gmail.com</string>
     <string name="exp_password">e.g. 123456</string>
     <string name="exp_confirm">e.g. 123456</string>
