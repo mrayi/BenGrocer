@@ -3,8 +3,12 @@ package com.lu.lianchyn.bengrocer;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,8 +20,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,24 +43,10 @@ public class StaffFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    MaterialSearchView searchView;
-    String[] lstSource = {
-            "Apple",
-            "Boy",
-            "Cat",
-            "Donkey",
-            "Elephant",
-            "Fan",
-            "Girl",
-            "Horse",
-            "Ice",
-            "Jelly",
-            "King",
-            "Lion",
-            "Moon",
-            "Nurse"
-    };
-    ListView lstView;
+    private MaterialSearchView searchView;
+    private String[] lstSource;
+    private ListView lstView;
+    private FirebaseFirestore db;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -98,26 +92,70 @@ public class StaffFragment extends Fragment {
         // Inflate the layout for this fragment
         final View v =  inflater.inflate(R.layout.fragment_staff, container, false);
 
-        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity)getActivity()).setTitle("Material Search");
-        toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
+        db = FirebaseFirestore.getInstance();
+        FirebaseFirestore.getInstance()
+                .collection("Staff")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<DocumentSnapshot> myListOfDocuments = task.getResult().getDocuments();
+                            lstSource = new String[myListOfDocuments.size()];
+                            for(int i = 0; i < myListOfDocuments.size(); i++) {
+                                lstSource[i] = (String) myListOfDocuments.get(i).get("sid") + " " + (String) myListOfDocuments.get(i).get("Name");
+                            }
+                        }
 
-        setHasOptionsMenu(true);
-        lstView = (ListView) v.findViewById(R.id.lstView);
-        ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, lstSource);
-        lstView.setAdapter(adapter);
+                        setHasOptionsMenu(true);
+                        lstView = (ListView) v.findViewById(R.id.lstView);
+                        ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, lstSource);
+                        lstView.setAdapter(adapter);
+
+                        lstView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+                        {
+                            @Override public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
+                            {
+                                for(int a = 0; a < arg0.getChildCount(); a++)
+                                {
+                                    arg0.getChildAt(a).setBackgroundColor(Color.TRANSPARENT);
+                                }
+
+                                arg1.setBackgroundColor(Color.GREEN);
+                            }
+                        });
+                    }
+                });
+
+        // Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
+        // ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        // ((AppCompatActivity)getActivity()).setTitle("Material Search");
+        // toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
         searchView = (MaterialSearchView) v.findViewById(R.id.search_view);
+        searchView.setVisibility(View.INVISIBLE);
 
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
-
+                searchView.setVisibility(View.VISIBLE);
+                TypedValue tv = new TypedValue();
+                int actionBarHeight = 0;
+                if (getActivity().getTheme().resolveAttribute(R.attr.actionBarSize, tv, true))
+                {
+                    actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+                }
+                ListView.MarginLayoutParams p = (ListView.MarginLayoutParams) v.findViewById(R.id.lstView).getLayoutParams();
+                p.setMargins(0, actionBarHeight, 0, 0);
+                v.requestLayout();
             }
 
             @Override
             public void onSearchViewClosed() {
+                searchView.setVisibility(View.INVISIBLE);
+                ListView.MarginLayoutParams p = (ListView.MarginLayoutParams) v.findViewById(R.id.lstView).getLayoutParams();
+                p.setMargins(0, 0, 0, 0);
+                v.requestLayout();
                 lstView = (ListView) v.findViewById(R.id.lstView);
                 ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, lstSource);
                 lstView.setAdapter(adapter);
@@ -135,7 +173,7 @@ public class StaffFragment extends Fragment {
                 if(newText != null && !newText.isEmpty()) {
                     List<String> lstFound = new ArrayList<String>();
                     for(String item:lstSource) {
-                        if(item.contains(newText))
+                        if(item.toLowerCase().contains(newText.toLowerCase()))
                             lstFound.add(item);
                     }
 
@@ -148,19 +186,6 @@ public class StaffFragment extends Fragment {
                 }
                 return true;
            }
-        });
-
-        lstView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
-            {
-                for(int a = 0; a < arg0.getChildCount(); a++)
-                {
-                    arg0.getChildAt(a).setBackgroundColor(Color.TRANSPARENT);
-                }
-
-                arg1.setBackgroundColor(Color.GREEN);
-            }
         });
 
         return v;
