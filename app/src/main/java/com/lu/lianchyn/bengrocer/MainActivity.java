@@ -1,5 +1,6 @@
 package com.lu.lianchyn.bengrocer;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -110,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void login(View v) {
+        final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Please Wait...","Processing...", true);
+
         ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
 
@@ -155,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                                             address = (String) document.get("Address");
                                             // Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                                             Intent i;
+                                            progressDialog.dismiss();
                                             String position = (String) document.get("Position");
                                             switch(position) {
                                                 case "Manager":
