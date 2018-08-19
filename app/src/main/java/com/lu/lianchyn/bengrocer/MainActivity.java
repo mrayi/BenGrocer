@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
                             String position = (String) document.get("Position");
                             switch(position){
+
                                 case "Manager":
                                     i = new Intent(MainActivity.this, Manager.class);
                                     startActivity(i);

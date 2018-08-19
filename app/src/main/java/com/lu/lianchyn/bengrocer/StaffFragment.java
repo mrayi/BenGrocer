@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -103,41 +105,7 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
         final View v =  inflater.inflate(R.layout.fragment_staff, container, false);
 
         db = FirebaseFirestore.getInstance();
-        FirebaseFirestore.getInstance()
-                .collection("Staff")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            List<DocumentSnapshot> myListOfDocuments = task.getResult().getDocuments();
-                            lstSource = new String[myListOfDocuments.size()];
-                            for(int i = 0; i < myListOfDocuments.size(); i++) {
-                                lstSource[i] = (String) myListOfDocuments.get(i).get("sid") + " " + (String) myListOfDocuments.get(i).get("Name");
-                            }
-                            // Toast.makeText(getActivity(), Integer.toString(myListOfDocuments.size()), Toast.LENGTH_LONG).show();
-                            staff_count = myListOfDocuments.size();
-                        }
-
-                        setHasOptionsMenu(true);
-                        lstView = (ListView) v.findViewById(R.id.lstView);
-                        ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, lstSource);
-                        lstView.setAdapter(adapter);
-
-                        lstView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-                        {
-                            @Override public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
-                            {
-                                for(int a = 0; a < arg0.getChildCount(); a++)
-                                {
-                                    arg0.getChildAt(a).setBackgroundColor(Color.TRANSPARENT);
-                                }
-
-                                arg1.setBackgroundColor(Color.GREEN);
-                            }
-                        });
-                    }
-                });
+        loadList();
 
         // Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
         // ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
@@ -289,6 +257,61 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
 
                 break;
         }
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        loadList();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadList();
+    }
+
+    public void loadList() {
+        FirebaseFirestore.getInstance()
+                .collection("Staff")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<DocumentSnapshot> myListOfDocuments = task.getResult().getDocuments();
+                            lstSource = new String[myListOfDocuments.size()];
+                            for(int i = 0; i < myListOfDocuments.size(); i++) {
+                                lstSource[i] = (String) myListOfDocuments.get(i).get("sid") + " " + (String) myListOfDocuments.get(i).get("Name");
+                            }
+                            // Toast.makeText(getActivity(), Integer.toString(myListOfDocuments.size()), Toast.LENGTH_LONG).show();
+                            staff_count = myListOfDocuments.size();
+                        }
+
+                        setHasOptionsMenu(true);
+                        lstView = (ListView) getActivity().findViewById(R.id.lstView);
+                        ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, lstSource);
+                        lstView.setAdapter(adapter);
+                        adapter.sort(new Comparator<String>() {
+                            @Override
+                            public int compare(String lhs, String rhs) {
+                                return lhs.compareTo(rhs);   //or whatever your sorting algorithm
+                            }
+                        });
+                        lstView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+                        {
+                            @Override public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
+                            {
+                                for(int a = 0; a < arg0.getChildCount(); a++)
+                                {
+                                    arg0.getChildAt(a).setBackgroundColor(Color.TRANSPARENT);
+                                }
+
+                                arg1.setBackgroundColor(Color.GREEN);
+                            }
+                        });
+                    }
+                });
     }
 
 }

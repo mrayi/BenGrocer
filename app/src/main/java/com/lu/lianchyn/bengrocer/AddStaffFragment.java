@@ -1,13 +1,16 @@
 package com.lu.lianchyn.bengrocer;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executor;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +46,7 @@ public class AddStaffFragment extends Fragment implements View.OnClickListener {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "AddStaffFragment";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -44,7 +61,11 @@ public class AddStaffFragment extends Fragment implements View.OnClickListener {
     private EditText etAddress;
     private EditText etIc;
     private EditText etName;
+    private Spinner snPosition;
     private EditText etSalary;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private int staff_count = 0;
 
     public AddStaffFragment() {
         // Required empty public constructor
@@ -102,6 +123,7 @@ public class AddStaffFragment extends Fragment implements View.OnClickListener {
 
         Bundle bundle = this.getArguments();
         // Toast.makeText(getActivity(), bundle.get("staff_count").toString(), Toast.LENGTH_LONG).show();
+        staff_count = Integer.parseInt(bundle.get("staff_count").toString());
 
         etEmail = v.findViewById(R.id.email);
         etPassword = v.findViewById(R.id.password);
@@ -109,7 +131,11 @@ public class AddStaffFragment extends Fragment implements View.OnClickListener {
         etAddress = v.findViewById(R.id.address);
         etIc = v.findViewById(R.id.ic);
         etName = v.findViewById(R.id.name);
+        snPosition = v.findViewById(R.id.position);
         etSalary = v.findViewById(R.id.salary);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         return v;
     }
@@ -157,13 +183,15 @@ public class AddStaffFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v){
         switch(v.getId()) {
             case R.id.create:
-                String email = String.valueOf(etEmail.getText());
+                final String email = String.valueOf(etEmail.getText());
                 String password = String.valueOf(etPassword.getText());
                 String confirm = String.valueOf(etConfirm.getText());
-                String address = String.valueOf(etAddress.getText());
-                String ic = String.valueOf(etIc.getText());
-                String name = String.valueOf(etName.getText());
-                String salary = String.valueOf(etSalary.getText());
+                final String address = String.valueOf(etAddress.getText());
+                final String ic = String.valueOf(etIc.getText());
+                final String name = String.valueOf(etName.getText());
+                final String position = snPosition.getSelectedItem().toString();
+                final String salary = String.valueOf(etSalary.getText());
+                final String sid = "S" + String.format("%07d", staff_count);
                 if(
                         email == null || email.isEmpty() ||
                         password == null || password.isEmpty() ||
@@ -177,24 +205,62 @@ public class AddStaffFragment extends Fragment implements View.OnClickListener {
                 } else if(!password.equals(confirm)) {
                     Toast.makeText(getActivity(), "Your password and confirm password are different.", Toast.LENGTH_LONG).show();
                 } else {
-                    android.support.v4.app.FragmentManager fm  = ((AppCompatActivity)getActivity()).getSupportFragmentManager();
-                    fm.popBackStack();
+                    mAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener((Activity) getContext(), new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
-                    FragmentTabHost mTabHost;
-                    mTabHost = (FragmentTabHost)getActivity().findViewById(android.R.id.tabhost);
-                    mTabHost.setup(getActivity(), ((AppCompatActivity)getActivity()).getSupportFragmentManager(), R.id.realtabcontent);
+                                    if (task.isSuccessful()) {
+                                        FirebaseUser newUser = task.getResult().getUser();
+                                        // Log.d(TAG, "onComplete: uid=" + user.getUid());
+                                        Map<String, Object> newStaff = new HashMap<>();
+                                        newStaff.put("Address", address);
+                                        newStaff.put("Email", email);
+                                        newStaff.put("IC_NO", ic);
+                                        newStaff.put("Name", name);
+                                        newStaff.put("Position", position);
+                                        newStaff.put("Salary", Double.parseDouble(salary));
+                                        newStaff.put("sid", sid);
 
-                    mTabHost.addTab(mTabHost.newTabSpec("Staff").setIndicator("Staff"),
-                            StaffFragment.class, null);
-                    mTabHost.addTab(mTabHost.newTabSpec("Member").setIndicator("Member"),
-                            MemberFragment.class, null);
-                    mTabHost.addTab(mTabHost.newTabSpec("Stock").setIndicator("Stock"),
-                            StockFragment.class, null);
-                    mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
-                            PosFragment.class, null);
-                    mTabHost.setCurrentTab(1);
-                    mTabHost.setCurrentTab(0);
-                    Toast.makeText(getActivity().getBaseContext(), "New staff created successfully.", Toast.LENGTH_LONG).show();
+                                        db.collection("Staff").document(newUser.getUid())
+                                                .set(newStaff)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d(TAG, "DocumentSnapshot successfully written!");
+
+                                                        android.support.v4.app.FragmentManager fm  = ((AppCompatActivity)getActivity()).getSupportFragmentManager();
+                                                        fm.popBackStack();
+
+                                                        FragmentTabHost mTabHost;
+                                                        mTabHost = (FragmentTabHost)getActivity().findViewById(android.R.id.tabhost);
+                                                        mTabHost.setup(getActivity(), ((AppCompatActivity)getActivity()).getSupportFragmentManager(), R.id.realtabcontent);
+
+                                                        mTabHost.addTab(mTabHost.newTabSpec("Staff").setIndicator("Staff"),
+                                                                StaffFragment.class, null);
+                                                        mTabHost.addTab(mTabHost.newTabSpec("Member").setIndicator("Member"),
+                                                                MemberFragment.class, null);
+                                                        mTabHost.addTab(mTabHost.newTabSpec("Stock").setIndicator("Stock"),
+                                                                StockFragment.class, null);
+                                                        mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
+                                                                PosFragment.class, null);
+                                                        mTabHost.setCurrentTab(1);
+                                                        mTabHost.setCurrentTab(0);
+                                                        Toast.makeText(getActivity().getBaseContext(), "New staff created successfully.", Toast.LENGTH_LONG).show();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w(TAG, "Error writing document", e);
+                                                    }
+                                                });
+                                    } else {
+                                        Toast.makeText(getActivity(), "Failed to create user.", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
                 }
                 break;
         }
