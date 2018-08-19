@@ -23,6 +23,14 @@
         <activity android:name=".AboutUs" />
         <activity android:name=".ChangePassword" />
         <activity android:name=".EditProfile"></activity>
+        <activity
+            android:name=".StockMgmt"
+            android:label="@string/title_activity_stock_mgmt"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".StockActivity"
+            ></activity>
+        <activity android:name=".AddStock"
+            android:parentActivityName=".StockActivity"></activity>
     </application>
 
 </manifest>
