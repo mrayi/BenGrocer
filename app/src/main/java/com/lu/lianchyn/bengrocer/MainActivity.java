@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                                     finish();
                                     break;
 */
+                                //changes
                                 case "Inventory Staff":
                                     i = new Intent(MainActivity.this, InventoryStaff.class);
                                     startActivity(i);
@@ -138,8 +139,9 @@ public class MainActivity extends AppCompatActivity {
                                                     startActivity(i);
                                                     finish();
                                                     break;
+                                                //changes
                                                 case "Inventory Staff":
-                                                    i = new Intent(MainActivity.this, InventoryStaff.class);
+                                                    i = new Intent(MainActivity.this,  InventoryStaff.class);
                                                     startActivity(i);
                                                     finish();
                                                     break;

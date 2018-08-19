@@ -30,4 +30,13 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Add">Add</string>
+    <string name="title_activity_stock_mgmt">StockMgmt</string>
+    <string name="StockName">Name</string>
+    <string name="Barcode">Barcode</string>
+    <string name="StockDescription">Description</string>
+    <string name="Quantity">Quanitity</string>
+    <string name="Price">Price</string>
+    <string name="Category">Category</string>
+    <string name="SupName">Supplier Name</string>
+    <string name="done">Done</string>
 </resources>
