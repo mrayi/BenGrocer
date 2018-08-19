@@ -11,6 +11,7 @@
     <string name="ic_no">IC NO</string>
     <string name="name">Name</string>
     <string name="position">Position</string>
+    <string name="salary">Salary</string>
     <string name="exp_email">e.g. abc@gmail.com</string>
     <string name="exp_password">e.g. 123456</string>
     <string name="exp_confirm">e.g. 123456</string>
@@ -22,6 +23,7 @@
         <item>Inventory Staff</item>
         <item>Cashier</item>
     </string-array>
+    <string name="exp_sal">e.g. 3211</string>
 
     <!-- temp -->
     <string name="manager">Manager</string>
