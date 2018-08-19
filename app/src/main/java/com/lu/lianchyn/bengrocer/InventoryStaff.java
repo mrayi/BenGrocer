@@ -46,7 +46,8 @@ public class InventoryStaff extends AppCompatActivity {
 
 
                 else if(id == R.id.aboutus){
-                    Toast.makeText(InventoryStaff.this,"About Us",Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(InventoryStaff.this, AboutUs.class);
+                    startActivity(i);
                 }
                 else if(id == R.id.logout){
                     FirebaseAuth.getInstance().signOut();

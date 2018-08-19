@@ -19,7 +19,10 @@
         <activity android:name=".Manager" />
         <activity android:name=".InventoryStaff" />
         <activity android:name=".Cashier" />
-        <activity android:name=".Profile"></activity>
+        <activity android:name=".Profile" />
+        <activity android:name=".AboutUs" />
+        <activity android:name=".ChangePassword" />
+        <activity android:name=".EditProfile"></activity>
     </application>
 
 </manifest>

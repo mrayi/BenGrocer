@@ -12,23 +12,37 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import static com.lu.lianchyn.bengrocer.MainActivity.name;
+import static com.lu.lianchyn.bengrocer.MainActivity.address;
 public class Cashier extends AppCompatActivity {
 
+    private FirebaseFirestore db;
     private DrawerLayout dl;
     private ActionBarDrawerToggle abdt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cashier);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         dl = (DrawerLayout)findViewById(R.id.dl);
         abdt = new ActionBarDrawerToggle(this,dl,R.string.Open,R.string.Close);
         abdt.setDrawerIndicatorEnabled(true);
 
         dl.addDrawerListener(abdt);
         abdt.syncState();
+
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -45,7 +59,9 @@ public class Cashier extends AppCompatActivity {
 
 
                 else if(id == R.id.aboutus){
-                    Toast.makeText(Cashier.this,"About Us",Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(Cashier.this, AboutUs.class);
+                    startActivity(i);
+
                 }
                 else if(id == R.id.logout){
                     FirebaseAuth.getInstance().signOut();
