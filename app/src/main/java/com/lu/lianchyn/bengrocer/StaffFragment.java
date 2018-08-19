@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -61,7 +62,7 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
     private DrawerLayout dl;
     private ActionBarDrawerToggle abdt;
     private FragmentTabHost mTabHost;
-
+    private int staff_count = 0;
 
     public StaffFragment() {
         // Required empty public constructor
@@ -114,6 +115,8 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
                             for(int i = 0; i < myListOfDocuments.size(); i++) {
                                 lstSource[i] = (String) myListOfDocuments.get(i).get("sid") + " " + (String) myListOfDocuments.get(i).get("Name");
                             }
+                            // Toast.makeText(getActivity(), Integer.toString(myListOfDocuments.size()), Toast.LENGTH_LONG).show();
+                            staff_count = myListOfDocuments.size();
                         }
 
                         setHasOptionsMenu(true);
@@ -262,14 +265,18 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v){
         switch(v.getId()) {
             case R.id.addStaff:
+                Bundle bundle = new Bundle();
+                bundle.putString("staff_count", Integer.toString(staff_count));
+
                 mTabHost = (FragmentTabHost)getActivity().findViewById(android.R.id.tabhost);
                 mTabHost.setup(getActivity(), ((AppCompatActivity)getActivity()).getSupportFragmentManager(), R.id.realtabcontent);
 
                 mTabHost.clearAllTabs();
 
                 FragmentManager fm  = getFragmentManager();
-                StaffFragment thisFrag = new StaffFragment();
+                // StaffFragment thisFrag = new StaffFragment();
                 AddStaffFragment nextFrag= new AddStaffFragment();
+                nextFrag.setArguments(bundle);
                 /*
                 fm.beginTransaction()
                         .add(R.id.realtabcontent, thisFrag)

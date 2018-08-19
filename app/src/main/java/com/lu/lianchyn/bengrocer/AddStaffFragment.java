@@ -3,6 +3,8 @@ package com.lu.lianchyn.bengrocer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTabHost;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,7 +25,7 @@ import android.widget.Spinner;
  * Use the {@link AddStaffFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddStaffFragment extends Fragment {
+public class AddStaffFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -33,6 +38,13 @@ public class AddStaffFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private DrawerLayout dl;
     private ActionBarDrawerToggle abdt;
+    private EditText etEmail;
+    private EditText etPassword;
+    private EditText etConfirm;
+    private EditText etAddress;
+    private EditText etIc;
+    private EditText etName;
+    private EditText etSalary;
 
     public AddStaffFragment() {
         // Required empty public constructor
@@ -85,6 +97,20 @@ public class AddStaffFragment extends Fragment {
         myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         position.setAdapter(myAdapter);
 
+        Button create = (Button) v.findViewById(R.id.create);
+        create.setOnClickListener(this);
+
+        Bundle bundle = this.getArguments();
+        // Toast.makeText(getActivity(), bundle.get("staff_count").toString(), Toast.LENGTH_LONG).show();
+
+        etEmail = v.findViewById(R.id.email);
+        etPassword = v.findViewById(R.id.password);
+        etConfirm = v.findViewById(R.id.confirm);
+        etAddress = v.findViewById(R.id.address);
+        etIc = v.findViewById(R.id.ic);
+        etName = v.findViewById(R.id.name);
+        etSalary = v.findViewById(R.id.salary);
+
         return v;
     }
 
@@ -125,6 +151,53 @@ public class AddStaffFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onClick(View v){
+        switch(v.getId()) {
+            case R.id.create:
+                String email = String.valueOf(etEmail.getText());
+                String password = String.valueOf(etPassword.getText());
+                String confirm = String.valueOf(etConfirm.getText());
+                String address = String.valueOf(etAddress.getText());
+                String ic = String.valueOf(etIc.getText());
+                String name = String.valueOf(etName.getText());
+                String salary = String.valueOf(etSalary.getText());
+                if(
+                        email == null || email.isEmpty() ||
+                        password == null || password.isEmpty() ||
+                        confirm == null || confirm.isEmpty() ||
+                        address == null || address.isEmpty() ||
+                        ic == null || ic.isEmpty() ||
+                        name == null || name.isEmpty() ||
+                        salary == null || salary.isEmpty()
+                ) {
+                    Toast.makeText(getActivity(), "All fields are required.", Toast.LENGTH_LONG).show();
+                } else if(!password.equals(confirm)) {
+                    Toast.makeText(getActivity(), "Your password and confirm password are different.", Toast.LENGTH_LONG).show();
+                } else {
+                    android.support.v4.app.FragmentManager fm  = ((AppCompatActivity)getActivity()).getSupportFragmentManager();
+                    fm.popBackStack();
+
+                    FragmentTabHost mTabHost;
+                    mTabHost = (FragmentTabHost)getActivity().findViewById(android.R.id.tabhost);
+                    mTabHost.setup(getActivity(), ((AppCompatActivity)getActivity()).getSupportFragmentManager(), R.id.realtabcontent);
+
+                    mTabHost.addTab(mTabHost.newTabSpec("Staff").setIndicator("Staff"),
+                            StaffFragment.class, null);
+                    mTabHost.addTab(mTabHost.newTabSpec("Member").setIndicator("Member"),
+                            MemberFragment.class, null);
+                    mTabHost.addTab(mTabHost.newTabSpec("Stock").setIndicator("Stock"),
+                            StockFragment.class, null);
+                    mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
+                            PosFragment.class, null);
+                    mTabHost.setCurrentTab(1);
+                    mTabHost.setCurrentTab(0);
+                    Toast.makeText(getActivity().getBaseContext(), "New staff created successfully.", Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
     }
 
 }

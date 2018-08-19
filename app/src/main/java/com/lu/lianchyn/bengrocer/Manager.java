@@ -76,6 +76,7 @@ public class Manager extends AppCompatActivity {
                 StockFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
                 PosFragment.class, null);
+
     }
 
     @Override
