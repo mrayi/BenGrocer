@@ -41,12 +41,14 @@ public class Manager extends AppCompatActivity {
                 int id = item.getItemId();
 
                 if(id == R.id.profile){
-                    Toast.makeText(Manager.this,"Profile",Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(Manager.this, Profile.class);
+                    startActivity(i);
                 }
 
 
                 else if(id == R.id.aboutus){
-                    Toast.makeText(Manager.this,"About Us",Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(Manager.this, AboutUs.class);
+                    startActivity(i);
                 }
                 else if(id == R.id.logout){
                     FirebaseAuth.getInstance().signOut();

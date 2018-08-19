@@ -45,7 +45,9 @@ public class Cashier extends AppCompatActivity {
 
 
                 else if(id == R.id.aboutus){
-                    Toast.makeText(Cashier.this,"About Us",Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(Cashier.this, AboutUs.class);
+                    startActivity(i);
+
                 }
                 else if(id == R.id.logout){
                     FirebaseAuth.getInstance().signOut();
