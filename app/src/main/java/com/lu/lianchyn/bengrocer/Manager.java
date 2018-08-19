@@ -83,33 +83,24 @@ public class Manager extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         AddStaffFragment addStaffFragment = (AddStaffFragment)getSupportFragmentManager().findFragmentByTag("AddStaff");
         ViewStaffFragment viewStaffFragment = (ViewStaffFragment)getSupportFragmentManager().findFragmentByTag("ViewStaff");
+        EditStaffFragment editStaffFragment = (EditStaffFragment)getSupportFragmentManager().findFragmentByTag("EditStaff");
         if(
                 (addStaffFragment != null && addStaffFragment.isVisible() && item.getItemId() == android.R.id.home) ||
                 (viewStaffFragment != null && viewStaffFragment.isVisible() && item.getItemId() == android.R.id.home)
         ) {
-            android.support.v4.app.FragmentManager fm  = getSupportFragmentManager();
-            // Fragment prevFrag = new StaffFragment();
-
-            fm.popBackStack();
-            /*
-            fm.beginTransaction()
-                    .replace(R.id.realtabcontent, prevFrag)
-                    .addToBackStack(null)
-                    .commit();
-            */
-            mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
-            mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-
-            mTabHost.addTab(mTabHost.newTabSpec("Staff").setIndicator("Staff"),
-                    StaffFragment.class, null);
-            mTabHost.addTab(mTabHost.newTabSpec("Member").setIndicator("Member"),
-                    MemberFragment.class, null);
-            mTabHost.addTab(mTabHost.newTabSpec("Stock").setIndicator("Stock"),
-                    StockFragment.class, null);
-            mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
-                    PosFragment.class, null);
-            mTabHost.setCurrentTab(1);
-            mTabHost.setCurrentTab(0);
+            rebuild();
+            return true;
+        } else if((editStaffFragment != null && editStaffFragment.isVisible() && item.getItemId() == android.R.id.home)) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Discard change?").setCancelable(false)
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            rebuild();
+                            dialog.cancel();
+                        }
+                    })
+                    .setNegativeButton("No", null).show();
             return true;
         }
         return  abdt.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
@@ -119,33 +110,24 @@ public class Manager extends AppCompatActivity {
     public void onBackPressed() {
         AddStaffFragment addStaffFragment = (AddStaffFragment)getSupportFragmentManager().findFragmentByTag("AddStaff");
         ViewStaffFragment viewStaffFragment = (ViewStaffFragment)getSupportFragmentManager().findFragmentByTag("ViewStaff");
+        EditStaffFragment editStaffFragment = (EditStaffFragment)getSupportFragmentManager().findFragmentByTag("EditStaff");
         if(
                 (addStaffFragment != null && addStaffFragment.isVisible()) ||
                 (viewStaffFragment != null && viewStaffFragment.isVisible())
         ) {
-            android.support.v4.app.FragmentManager fm  = getSupportFragmentManager();
-            // Fragment prevFrag = new StaffFragment();
-
-            fm.popBackStack();
-            /*
-            fm.beginTransaction()
-                    .replace(R.id.realtabcontent, prevFrag)
-                    .addToBackStack(null)
-                    .commit();
-            */
-            mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
-            mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-
-            mTabHost.addTab(mTabHost.newTabSpec("Staff").setIndicator("Staff"),
-                    StaffFragment.class, null);
-            mTabHost.addTab(mTabHost.newTabSpec("Member").setIndicator("Member"),
-                    MemberFragment.class, null);
-            mTabHost.addTab(mTabHost.newTabSpec("Stock").setIndicator("Stock"),
-                    StockFragment.class, null);
-            mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
-                    PosFragment.class, null);
-            mTabHost.setCurrentTab(1);
-            mTabHost.setCurrentTab(0);
+            rebuild();
+            return;
+        } else if(editStaffFragment != null && editStaffFragment.isVisible()) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Discard change?").setCancelable(false)
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            rebuild();
+                            dialog.cancel();
+                        }
+                    })
+                    .setNegativeButton("No", null).show();
             return;
         }
         new AlertDialog.Builder(this)
@@ -160,4 +142,29 @@ public class Manager extends AppCompatActivity {
                 .show();
     }
 
+    public void rebuild() {
+        android.support.v4.app.FragmentManager fm  = getSupportFragmentManager();
+        // Fragment prevFrag = new StaffFragment();
+
+        fm.popBackStack();
+            /*
+            fm.beginTransaction()
+                    .replace(R.id.realtabcontent, prevFrag)
+                    .addToBackStack(null)
+                    .commit();
+            */
+        mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
+        mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+
+        mTabHost.addTab(mTabHost.newTabSpec("Staff").setIndicator("Staff"),
+                StaffFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("Member").setIndicator("Member"),
+                MemberFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("Stock").setIndicator("Stock"),
+                StockFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
+                PosFragment.class, null);
+        mTabHost.setCurrentTab(1);
+        mTabHost.setCurrentTab(0);
+    };
 }
