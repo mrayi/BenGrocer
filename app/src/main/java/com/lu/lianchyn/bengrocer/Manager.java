@@ -86,12 +86,28 @@ public class Manager extends AppCompatActivity {
         AddStaffFragment addStaffFragment = (AddStaffFragment)getSupportFragmentManager().findFragmentByTag("AddStaff");
         if(addStaffFragment != null && addStaffFragment.isVisible() && item.getItemId() == android.R.id.home) {
             android.support.v4.app.FragmentManager fm  = getSupportFragmentManager();
-            Fragment prevFrag = new StaffFragment();
+            // Fragment prevFrag = new StaffFragment();
+
             fm.popBackStack();
+            /*
             fm.beginTransaction()
                     .replace(R.id.realtabcontent, prevFrag)
                     .addToBackStack(null)
                     .commit();
+            */
+            mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
+            mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+
+            mTabHost.addTab(mTabHost.newTabSpec("Staff").setIndicator("Staff"),
+                    StaffFragment.class, null);
+            mTabHost.addTab(mTabHost.newTabSpec("Member").setIndicator("Member"),
+                    MemberFragment.class, null);
+            mTabHost.addTab(mTabHost.newTabSpec("Stock").setIndicator("Stock"),
+                    StockFragment.class, null);
+            mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
+                    PosFragment.class, null);
+            mTabHost.setCurrentTab(1);
+            mTabHost.setCurrentTab(0);
             return true;
         }
         return  abdt.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);

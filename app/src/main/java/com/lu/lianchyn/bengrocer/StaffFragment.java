@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTabHost;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -59,6 +60,7 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
     private DrawerLayout dl;
     private ActionBarDrawerToggle abdt;
+    private FragmentTabHost mTabHost;
 
 
     public StaffFragment() {
@@ -260,14 +262,19 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v){
         switch(v.getId()) {
             case R.id.addStaff:
+                mTabHost = (FragmentTabHost)getActivity().findViewById(android.R.id.tabhost);
+                mTabHost.setup(getActivity(), ((AppCompatActivity)getActivity()).getSupportFragmentManager(), R.id.realtabcontent);
+
+                mTabHost.clearAllTabs();
+
                 FragmentManager fm  = getFragmentManager();
                 StaffFragment thisFrag = new StaffFragment();
                 AddStaffFragment nextFrag= new AddStaffFragment();
-
+                /*
                 fm.beginTransaction()
                         .add(R.id.realtabcontent, thisFrag)
                         .commit();
-
+                */
                 fm.beginTransaction()
                         .replace(R.id.realtabcontent, nextFrag, "AddStaff")
                         .addToBackStack(null)
