@@ -135,7 +135,7 @@ public class ViewStaffFragment extends Fragment implements View.OnClickListener 
 
         tvAddress.setText("Address: " + address);
         tvEmail.setText("Email: " + email);
-        tvIc.setText("  IC_NO: " + ic);
+        tvIc.setText("IC_NO: " + ic);
         tvName.setText("Name: " + name);
         tvPosition.setText("Position: " + position);
         tvSalary.setText("Salary: RM" + String.format("%.2f", Double.parseDouble(salary)));
