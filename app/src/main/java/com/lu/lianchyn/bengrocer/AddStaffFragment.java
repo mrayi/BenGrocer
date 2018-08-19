@@ -24,6 +24,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -64,6 +66,7 @@ public class AddStaffFragment extends Fragment implements View.OnClickListener {
     private Spinner snPosition;
     private EditText etSalary;
     private FirebaseAuth mAuth;
+    private FirebaseAuth mAuth2;
     private FirebaseFirestore db;
     private int staff_count = 0;
 
@@ -135,6 +138,7 @@ public class AddStaffFragment extends Fragment implements View.OnClickListener {
         etSalary = v.findViewById(R.id.salary);
 
         mAuth = FirebaseAuth.getInstance();
+        mAuth2 = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
         return v;
@@ -205,7 +209,16 @@ public class AddStaffFragment extends Fragment implements View.OnClickListener {
                 } else if(!password.equals(confirm)) {
                     Toast.makeText(getActivity(), "Your password and confirm password are different.", Toast.LENGTH_LONG).show();
                 } else {
-                    mAuth.createUserWithEmailAndPassword(email, password)
+                    FirebaseOptions firebaseOptions = new FirebaseOptions.Builder()
+                            .setDatabaseUrl("https://chyn-c955f.firebaseio.com")
+                            .setApiKey("AIzaSyB2aGAMudIZPVWmJvcv-4zPrXL0NNj3lTA")
+                            .setApplicationId("chyn-c955f").build();
+                    try { FirebaseApp myApp = FirebaseApp.initializeApp(getActivity().getApplicationContext(), firebaseOptions, "AnyAppName");
+                        mAuth2 = FirebaseAuth.getInstance(myApp);
+                    } catch (IllegalStateException e){
+                        mAuth2 = FirebaseAuth.getInstance(FirebaseApp.getInstance("AnyAppName"));
+                    }
+                    mAuth2.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener((Activity) getContext(), new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -247,6 +260,7 @@ public class AddStaffFragment extends Fragment implements View.OnClickListener {
                                                                 PosFragment.class, null);
                                                         mTabHost.setCurrentTab(1);
                                                         mTabHost.setCurrentTab(0);
+                                                        mAuth2.signOut();
                                                         Toast.makeText(getActivity().getBaseContext(), "New staff created successfully.", Toast.LENGTH_LONG).show();
                                                     }
                                                 })
