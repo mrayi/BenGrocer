@@ -1,9 +1,12 @@
 package com.lu.lianchyn.bengrocer;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -35,6 +38,7 @@ public class Manager extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         NavigationView nav_view = (NavigationView)findViewById(R.id.nav_view);
+
         nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -77,6 +81,17 @@ public class Manager extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
+        AddStaffFragment addStaffFragment = (AddStaffFragment)getSupportFragmentManager().findFragmentByTag("AddStaff");
+        if(addStaffFragment != null && addStaffFragment.isVisible() && item.getItemId() == android.R.id.home) {
+            android.support.v4.app.FragmentManager fm  = getSupportFragmentManager();
+            Fragment prevFrag = new StaffFragment();
+            fm.popBackStack();
+            fm.beginTransaction()
+                    .replace(R.id.realtabcontent, prevFrag)
+                    .addToBackStack(null)
+                    .commit();
+            return true;
+        }
         return  abdt.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 

@@ -30,7 +30,7 @@
         />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/addStaff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
@@ -38,7 +38,7 @@
         android:src="@android:drawable/ic_menu_add" />
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/viewStaff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
@@ -46,7 +46,7 @@
         android:src="@android:drawable/ic_menu_view" />
 
     <ImageButton
-        android:id="@+id/imageButton3"
+        android:id="@+id/editStaff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"

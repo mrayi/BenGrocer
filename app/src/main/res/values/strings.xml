@@ -6,6 +6,10 @@
     <string name="password">Password</string>
     <string name="log_in">LOG IN</string>
     <string name="search">Search...</string>
+    <string name="confirn_password">Confirm Password</string>
+    <string name="exp_email">e.g. abc@gmail.com</string>
+    <string name="exp_password">e.g. 123456</string>
+    <string name="exp_confirm">e.g. 123456</string>
 
     <!-- temp -->
     <string name="manager">Manager</string>

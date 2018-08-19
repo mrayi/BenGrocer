@@ -5,6 +5,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -18,6 +21,7 @@ import android.view.ViewGroup;
 import android.support.v7.widget.Toolbar;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,7 +42,7 @@ import java.util.List;
  * Use the {@link StaffFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class StaffFragment extends Fragment {
+public class StaffFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -53,6 +57,9 @@ public class StaffFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle abdt;
+
 
     public StaffFragment() {
         // Required empty public constructor
@@ -188,6 +195,18 @@ public class StaffFragment extends Fragment {
            }
         });
 
+        ImageButton addStaff = (ImageButton) v.findViewById(R.id.addStaff);
+        addStaff.setOnClickListener(this);
+
+        dl = (DrawerLayout)getActivity().findViewById(R.id.dl);
+        abdt = new ActionBarDrawerToggle(getActivity(),dl,R.string.Open,R.string.Close);
+        abdt.setDrawerIndicatorEnabled(true);
+
+        dl.addDrawerListener(abdt);
+        abdt.syncState();
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         return v;
     }
 
@@ -235,6 +254,27 @@ public class StaffFragment extends Fragment {
         menuInflater.inflate(R.menu.menu_item, menu);
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
+    }
+
+    @Override
+    public void onClick(View v){
+        switch(v.getId()) {
+            case R.id.addStaff:
+                FragmentManager fm  = getFragmentManager();
+                StaffFragment thisFrag = new StaffFragment();
+                AddStaffFragment nextFrag= new AddStaffFragment();
+
+                fm.beginTransaction()
+                        .add(R.id.realtabcontent, thisFrag)
+                        .commit();
+
+                fm.beginTransaction()
+                        .replace(R.id.realtabcontent, nextFrag, "AddStaff")
+                        .addToBackStack(null)
+                        .commit();
+
+                break;
+        }
     }
 
 }
