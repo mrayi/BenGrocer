@@ -187,38 +187,51 @@ public class PosFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if(!(editTextQuantity.getText().toString().matches("")||editTextQuantity.getText().toString().matches("0"))){
-                    DocumentReference docRe = db.collection("Stock").document(editTextItemID.getText().toString());
-                    docRe.get()
-                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    if (documentSnapshot.exists()) {
-                                        if (documentSnapshot.getDouble("Qty") != 0) {
-                                            String itemID = documentSnapshot.getString("Stock_ID");
-                                            String itemName = documentSnapshot.getString("Name");
-                                            int quantity = Integer.parseInt(editTextQuantity.getText().toString());
-                                            double price = documentSnapshot.getDouble("Price");
-                                            Item item = new Item(itemID,itemName ,quantity,price);
-                                            itemList.add(item);
-                                            itemAdapter.notifyDataSetChanged();
-                                            Toast.makeText(getActivity(), itemID+itemName+quantity, Toast.LENGTH_SHORT).show();
-                                        }else{
-                                            Toast.makeText(getActivity(), "Item is Out of Stock", Toast.LENGTH_SHORT).show();
-                                        }
-                                    } else {
-                                        Toast.makeText(getActivity(), "Item ID Not Found", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), e.getMessage(),
-                                    Toast.LENGTH_SHORT).show();
+                if(!(editTextQuantity.getText().toString().matches("")||editTextQuantity.getText().toString().matches("0")||editTextItemID.getText().toString().matches(""))){
+                    boolean exist=false;
+                    for(int i =0; i<itemList.size();i++) {
+                        if (editTextItemID.getText().toString().matches(itemList.get(i).getId())) {
+                            itemList.get(i).addQuantity(Integer.parseInt(editTextQuantity.getText().toString()));
+                            itemAdapter.notifyDataSetChanged();
+                            exist = true;
                         }
-                    });
+                    }
+                    if(!exist) {
+                        DocumentReference docRe = db.collection("Stock").document(editTextItemID.getText().toString());
+                        docRe.get()
+                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        if (documentSnapshot.exists()) {
+                                            if (documentSnapshot.getDouble("Qty") != 0) {
+                                                String itemID = documentSnapshot.getString("Stock_ID");
+                                                String itemName = documentSnapshot.getString("Name");
+                                                int quantity = Integer.parseInt(editTextQuantity.getText().toString());
+                                                double price = documentSnapshot.getDouble("Price");
+                                                Item item = new Item(itemID, itemName, quantity, price);
+                                                itemList.add(item);
+                                                itemAdapter.notifyDataSetChanged();
+                                                Toast.makeText(getActivity(), itemID + itemName + quantity, Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(getActivity(), "Item is Out of Stock", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Toast.makeText(getActivity(), "Item ID Not Found", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getActivity(), e.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                 }else{
-                    Toast.makeText(getActivity(), "Item Quantity cannot be empty or 0", Toast.LENGTH_SHORT).show();
+                    if (editTextItemID.getText().toString().matches(""))
+                        Toast.makeText(getActivity(), "Please key in item id", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(getActivity(), "Item Quantity cannot be empty or 0", Toast.LENGTH_SHORT).show();
                 }
             }
         });
