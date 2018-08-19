@@ -34,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -65,6 +66,8 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
     private ActionBarDrawerToggle abdt;
     private FragmentTabHost mTabHost;
     private int staff_count = 0;
+    private String[][] fullDat;
+    private String[] selectedDat = null;
 
     public StaffFragment() {
         // Required empty public constructor
@@ -134,7 +137,7 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
             public void onSearchViewClosed() {
                 searchView.setVisibility(View.INVISIBLE);
                 ListView.MarginLayoutParams p = (ListView.MarginLayoutParams) v.findViewById(R.id.lstView).getLayoutParams();
-                p.setMargins(0, 0, 0, 0);
+                p.setMargins(0, 0, 0, 70);
                 v.requestLayout();
                 lstView = (ListView) v.findViewById(R.id.lstView);
                 ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, lstSource);
@@ -170,6 +173,8 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
 
         ImageButton addStaff = (ImageButton) v.findViewById(R.id.addStaff);
         addStaff.setOnClickListener(this);
+        ImageButton viewStaff = (ImageButton) v.findViewById(R.id.viewStaff);
+        viewStaff.setOnClickListener(this);
 
         dl = (DrawerLayout)getActivity().findViewById(R.id.dl);
         abdt = new ActionBarDrawerToggle(getActivity(),dl,R.string.Open,R.string.Close);
@@ -231,6 +236,7 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v){
+        FragmentManager fm  = getFragmentManager();
         switch(v.getId()) {
             case R.id.addStaff:
                 Bundle bundle = new Bundle();
@@ -241,9 +247,9 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
 
                 mTabHost.clearAllTabs();
 
-                FragmentManager fm  = getFragmentManager();
+                fm  = getFragmentManager();
                 // StaffFragment thisFrag = new StaffFragment();
-                AddStaffFragment nextFrag= new AddStaffFragment();
+                AddStaffFragment nextFrag = new AddStaffFragment();
                 nextFrag.setArguments(bundle);
                 /*
                 fm.beginTransaction()
@@ -254,6 +260,33 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
                         .replace(R.id.realtabcontent, nextFrag, "AddStaff")
                         .addToBackStack(null)
                         .commit();
+
+                break;
+            case R.id.viewStaff:
+                if(selectedDat != null) {
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putString("address", selectedDat[1]);
+                    bundle2.putString("email", selectedDat[2]);
+                    bundle2.putString("ic", selectedDat[3]);
+                    bundle2.putString("name", selectedDat[4]);
+                    bundle2.putString("position", selectedDat[5]);
+                    bundle2.putString("salary", selectedDat[6]);
+                    bundle2.putString("sid", selectedDat[7]);
+
+                    mTabHost = (FragmentTabHost)getActivity().findViewById(android.R.id.tabhost);
+                    mTabHost.setup(getActivity(), ((AppCompatActivity)getActivity()).getSupportFragmentManager(), R.id.realtabcontent);
+
+                    mTabHost.clearAllTabs();
+
+                    fm  = getFragmentManager();
+                    ViewStaffFragment nextFrag2= new ViewStaffFragment();
+                    nextFrag2.setArguments(bundle2);
+
+                    fm.beginTransaction()
+                            .replace(R.id.realtabcontent, nextFrag2, "ViewStaff")
+                            .addToBackStack(null)
+                            .commit();
+                }
 
                 break;
         }
@@ -281,8 +314,21 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
                         if (task.isSuccessful()) {
                             List<DocumentSnapshot> myListOfDocuments = task.getResult().getDocuments();
                             lstSource = new String[myListOfDocuments.size()];
+                            fullDat = new String[myListOfDocuments.size()][8];
                             for(int i = 0; i < myListOfDocuments.size(); i++) {
                                 lstSource[i] = (String) myListOfDocuments.get(i).get("sid") + " " + (String) myListOfDocuments.get(i).get("Name");
+                                fullDat[i][0] = (String) myListOfDocuments.get(i).getId();
+                                fullDat[i][1] = (String) myListOfDocuments.get(i).get("Address");
+                                fullDat[i][2] = (String) myListOfDocuments.get(i).get("Email");
+                                fullDat[i][3] = (String) myListOfDocuments.get(i).get("IC_NO");
+                                fullDat[i][4] = (String) myListOfDocuments.get(i).get("Name");
+                                fullDat[i][5] = (String) myListOfDocuments.get(i).get("Position");
+                                try {
+                                    fullDat[i][6] = Double.toString((Double) myListOfDocuments.get(i).get("Salary"));
+                                } catch(ClassCastException e) {
+                                    fullDat[i][6] = Long.toString((Long) myListOfDocuments.get(i).get("Salary"));
+                                }
+                                fullDat[i][7] = (String) myListOfDocuments.get(i).get("sid");
                             }
                             // Toast.makeText(getActivity(), Integer.toString(myListOfDocuments.size()), Toast.LENGTH_LONG).show();
                             staff_count = myListOfDocuments.size();
@@ -308,6 +354,13 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
                                 }
 
                                 arg1.setBackgroundColor(Color.GREEN);
+                                // Toast.makeText(getActivity(), lstView.getItemAtPosition(position).toString(), Toast.LENGTH_LONG).show();
+                                for(int i = 0; i < fullDat.length; i++) {
+                                    if(fullDat[i][7].equals(lstView.getItemAtPosition(position).toString().substring(0,8))) {
+                                        selectedDat = Arrays.copyOf(fullDat[i], fullDat[i].length);
+                                        // Toast.makeText(getActivity(), selectedDat[6], Toast.LENGTH_LONG).show();
+                                    }
+                                }
                             }
                         });
                     }

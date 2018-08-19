@@ -82,7 +82,11 @@ public class Manager extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         AddStaffFragment addStaffFragment = (AddStaffFragment)getSupportFragmentManager().findFragmentByTag("AddStaff");
-        if(addStaffFragment != null && addStaffFragment.isVisible() && item.getItemId() == android.R.id.home) {
+        ViewStaffFragment viewStaffFragment = (ViewStaffFragment)getSupportFragmentManager().findFragmentByTag("ViewStaff");
+        if(
+                (addStaffFragment != null && addStaffFragment.isVisible() && item.getItemId() == android.R.id.home) ||
+                (viewStaffFragment != null && viewStaffFragment.isVisible() && item.getItemId() == android.R.id.home)
+        ) {
             android.support.v4.app.FragmentManager fm  = getSupportFragmentManager();
             // Fragment prevFrag = new StaffFragment();
 
@@ -114,7 +118,11 @@ public class Manager extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         AddStaffFragment addStaffFragment = (AddStaffFragment)getSupportFragmentManager().findFragmentByTag("AddStaff");
-        if(addStaffFragment != null && addStaffFragment.isVisible()) {
+        ViewStaffFragment viewStaffFragment = (ViewStaffFragment)getSupportFragmentManager().findFragmentByTag("ViewStaff");
+        if(
+                (addStaffFragment != null && addStaffFragment.isVisible()) ||
+                (viewStaffFragment != null && viewStaffFragment.isVisible())
+        ) {
             android.support.v4.app.FragmentManager fm  = getSupportFragmentManager();
             // Fragment prevFrag = new StaffFragment();
 

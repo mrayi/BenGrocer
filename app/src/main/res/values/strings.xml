@@ -45,6 +45,7 @@
     <string name="StockBtn">Stock</string>
     <string name="ReportBtn">Report</string>
     <string name="SupplierBtn">Supplier</string>
+    <string name="sid">sid</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
