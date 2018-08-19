@@ -1,14 +1,19 @@
 package com.lu.lianchyn.bengrocer;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,7 +55,10 @@ public class PosFragment extends Fragment {
     private ArrayList<Item> itemList;
     private EditText editTextItemID;
     private EditText editTextQuantity;
-    private Button buttonInsertItem;
+    private Button buttonAdd;
+    private Button buttonRemove;
+    private TextView textViewTotal;
+
 
 
     // TODO: Rename and change types of parameters
@@ -107,7 +115,9 @@ public class PosFragment extends Fragment {
         listViewItem = v.findViewById(R.id.listViewItem);
         editTextItemID = v.findViewById(R.id.editTextItemID);
         editTextQuantity = v.findViewById(R.id.editTextQuantity);
-        buttonInsertItem = v.findViewById(R.id.buttonInsertItem);
+        buttonAdd = v.findViewById(R.id.buttonAdd);
+        buttonRemove = v.findViewById(R.id.buttonRemove);
+        textViewTotal = v.findViewById(R.id.textViewTotal);
 
         //get and show the staff id and name
         mAuth = FirebaseAuth.getInstance();
@@ -174,58 +184,137 @@ public class PosFragment extends Fragment {
         });
 
 
-
         //init item list view
         itemList = new ArrayList<>();
         final ItemAdapter itemAdapter = new ItemAdapter();
         listViewItem.setAdapter(itemAdapter);
 
 
-
         //onclick insert item
-        buttonInsertItem.setOnClickListener(new View.OnClickListener() {
+        buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if(!(editTextQuantity.getText().toString().matches("")||editTextQuantity.getText().toString().matches("0")||editTextItemID.getText().toString().matches(""))){
-                    boolean exist=false;
-                    for(int i =0; i<itemList.size();i++) {
-                        if (editTextItemID.getText().toString().matches(itemList.get(i).getId())) {
-                            itemList.get(i).addQuantity(Integer.parseInt(editTextQuantity.getText().toString()));
-                            itemAdapter.notifyDataSetChanged();
-                            exist = true;
-                        }
-                    }
-                    if(!exist) {
-                        DocumentReference docRe = db.collection("Stock").document(editTextItemID.getText().toString());
-                        docRe.get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        if (documentSnapshot.exists()) {
-                                            if (documentSnapshot.getDouble("Qty") != 0) {
+                if (!(editTextQuantity.getText().toString().matches("") || editTextQuantity.getText().toString().matches("0") || editTextItemID.getText().toString().matches(""))) {
+
+                    DocumentReference docRe = db.collection("Stock").document(editTextItemID.getText().toString());
+                    docRe.get()
+                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                                    if (documentSnapshot.exists()) {
+                                        int stock = documentSnapshot.getDouble("Qty").intValue();
+                                        int quantity = Integer.parseInt(editTextQuantity.getText().toString());
+                                        boolean exist = false;
+                                        for (int i = 0; i < itemList.size(); i++) {
+                                            if (editTextItemID.getText().toString().matches(itemList.get(i).getId())) {
+                                                if ((quantity + itemList.get(i).getQuantity()) > stock) {
+                                                    int left = stock - itemList.get(i).getQuantity();
+                                                    Toast.makeText(getActivity(), "Quantity entered is exceed", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(getActivity(), "The stock have " + left + " left", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    itemList.get(i).addQuantity(Integer.parseInt(editTextQuantity.getText().toString()));
+                                                    itemAdapter.notifyDataSetChanged();
+                                                    caltotal();
+                                                    Toast.makeText(getActivity(), "Successfully added " + editTextQuantity.getText() + " of " + itemList.get(i).getName(), Toast.LENGTH_SHORT).show();
+                                                }
+                                                exist = true;
+                                            }
+                                        }
+                                        if (!exist) {
+                                            if (!(stock == 0 || quantity > stock)) {
                                                 String itemID = documentSnapshot.getString("Stock_ID");
                                                 String itemName = documentSnapshot.getString("Name");
-                                                int quantity = Integer.parseInt(editTextQuantity.getText().toString());
                                                 double price = documentSnapshot.getDouble("Price");
                                                 Item item = new Item(itemID, itemName, quantity, price);
                                                 itemList.add(item);
                                                 itemAdapter.notifyDataSetChanged();
-                                                Toast.makeText(getActivity(), itemID + itemName + quantity, Toast.LENGTH_SHORT).show();
+                                                caltotal();
+                                                Toast.makeText(getActivity(), "Successfully added " + quantity + " of " + itemName, Toast.LENGTH_SHORT).show();
                                             } else {
-                                                Toast.makeText(getActivity(), "Item is Out of Stock", Toast.LENGTH_SHORT).show();
+                                                if (quantity > stock) {
+                                                    Toast.makeText(getActivity(), "Quantity entered is exceed", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(getActivity(), "The stock have " + stock + " left", Toast.LENGTH_SHORT).show();
+                                                } else
+                                                    Toast.makeText(getActivity(), "Item is Out of Stock", Toast.LENGTH_SHORT).show();
                                             }
-                                        } else {
-                                            Toast.makeText(getActivity(), "Item ID Not Found", Toast.LENGTH_SHORT).show();
                                         }
+                                    } else {
+                                        Toast.makeText(getActivity(), "Item ID Not Found", Toast.LENGTH_SHORT).show();
                                     }
-                                }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getActivity(), e.getMessage(),
-                                        Toast.LENGTH_SHORT).show();
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), e.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } else {
+                    if (editTextItemID.getText().toString().matches(""))
+                        Toast.makeText(getActivity(), "Please key in item id", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(getActivity(), "Item Quantity cannot be empty or 0", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        //for delete
+        listViewItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                editTextItemID.setText(itemList.get(i).getId());
+                editTextQuantity.setText("");
+                editTextQuantity.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(editTextQuantity, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
+
+        buttonRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(!(editTextItemID.getText().toString().matches("")||editTextQuantity.getText().toString().matches("") || editTextQuantity.getText().toString().matches("0")) ){
+                    int quantity = Integer.parseInt(editTextQuantity.getText().toString());
+                    boolean exist = false;
+                    for (int i = 0; i < itemList.size(); i++) {
+                        if (editTextItemID.getText().toString().matches(itemList.get(i).getId())) {
+                            if ((quantity > itemList.get(i).getQuantity())) {
+                                Toast.makeText(getActivity(), "Quantity entered is exceed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "There are " + itemList.get(i).getQuantity() + " of " + itemList.get(i).getName() +"in list", Toast.LENGTH_SHORT).show();
+                            } else {
+                                final int index = i;
+                                final int qty = quantity;
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                builder.setMessage("Are remove "+quantity+ " of "+itemList.get(index).getName()+"?")
+                                        .setCancelable(false)
+                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                itemList.get(index).minusQuantity(qty);
+
+                                                itemAdapter.notifyDataSetChanged();
+                                                caltotal();
+                                                Toast.makeText(getActivity(), "Successfully removed " + editTextQuantity.getText() + " of " + itemList.get(index).getName(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                            }
+                                        });
+                                AlertDialog alert = builder.create();
+                                alert.show();
                             }
-                        });
+                            exist = true;
+                        }
+                    }
+                    if (!exist) {
+                        Toast.makeText(getActivity(), "Item ID not in list", Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     if (editTextItemID.getText().toString().matches(""))
@@ -236,9 +325,22 @@ public class PosFragment extends Fragment {
             }
         });
 
-
         return v;
     }
+
+    //update total view
+    public void caltotal(){
+        double total = 0;
+        for(int i = 0; i<itemList.size();i++)
+            total +=itemList.get(i).getPrice() * itemList.get(i).getQuantity();
+
+        textViewTotal.setText("Total: " + String.format("%.2f",total));
+
+
+
+
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -299,7 +401,7 @@ public class PosFragment extends Fragment {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            view = getLayoutInflater().inflate(R.layout.item_list,null);
+            view = getLayoutInflater().inflate(R.layout.item_list, null);
 
             TextView textViewShowItemID = view.findViewById(R.id.textViewShowItemID);
             TextView textViewShowItemName = view.findViewById(R.id.textViewShowName);
@@ -310,8 +412,8 @@ public class PosFragment extends Fragment {
             textViewShowItemID.setText(itemList.get(i).getId());
             textViewShowItemName.setText(itemList.get(i).getName());
             textViewShowQuantity.setText(Integer.toString(itemList.get(i).getQuantity()));
-            textViewShowPrice.setText(String.format("%.2f",itemList.get(i).getPrice()));
-            textViewShowSubTotal.setText(String.format("%.2f",itemList.get(i).getPrice()*itemList.get(i).getQuantity()));
+            textViewShowPrice.setText(String.format("%.2f", itemList.get(i).getPrice()));
+            textViewShowSubTotal.setText(String.format("%.2f", itemList.get(i).getPrice() * itemList.get(i).getQuantity()));
 
             return view;
         }
@@ -348,7 +450,11 @@ public class PosFragment extends Fragment {
         }
 
         public void addQuantity(int qty) {
-            quantity = quantity+qty;
+            quantity = quantity + qty;
+        }
+
+        public void minusQuantity(int qty) {
+            quantity = quantity - qty;
         }
     }
 

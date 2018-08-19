@@ -62,4 +62,5 @@
     <string name="SubTotal">Sub Total</string>
     <string name="userPayAmount">User Pay Amount</string>
     <string name="RM">(RM)</string>
+    <string name="Barcode">Barcode</string>
 </resources>
