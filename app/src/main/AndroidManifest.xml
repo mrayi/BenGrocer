@@ -27,10 +27,11 @@
             android:name=".StockMgmt"
             android:label="@string/title_activity_stock_mgmt"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".StockActivity"
-            ></activity>
-        <activity android:name=".AddStock"
-            android:parentActivityName=".StockActivity"></activity>
+        <activity android:name=".StockActivity" />
+        <activity
+            android:name=".AddStock"
+            android:parentActivityName=".StockActivity" />
+        <activity android:name=".EditActivity"></activity>
     </application>
 
 </manifest>

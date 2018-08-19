@@ -71,4 +71,6 @@
     <string name="SubTotal">Sub Total</string>
     <string name="userPayAmount">User Pay Amount</string>
     <string name="RM">(RM)</string>
+    <string name="Save">Save</string>
+    <string name="Delete">Delete</string>
 </resources>
