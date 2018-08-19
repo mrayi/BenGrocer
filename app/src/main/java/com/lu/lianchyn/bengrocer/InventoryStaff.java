@@ -39,12 +39,15 @@ public class InventoryStaff extends AppCompatActivity {
                 int id = item.getItemId();
 
                 if(id == R.id.profile){
-                    Toast.makeText(InventoryStaff.this,"Profile",Toast.LENGTH_SHORT).show();
+
+                    Intent i = new Intent(InventoryStaff.this, Profile.class);
+                    startActivity(i);
                 }
 
 
                 else if(id == R.id.aboutus){
-                    Toast.makeText(InventoryStaff.this,"About Us",Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(InventoryStaff.this, AboutUs.class);
+                    startActivity(i);
                 }
                 else if(id == R.id.logout){
                     FirebaseAuth.getInstance().signOut();

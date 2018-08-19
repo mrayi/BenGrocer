@@ -35,18 +35,21 @@ public class Manager extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         NavigationView nav_view = (NavigationView)findViewById(R.id.nav_view);
+
         nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
 
                 if(id == R.id.profile){
-                    Toast.makeText(Manager.this,"Profile",Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(Manager.this, Profile.class);
+                    startActivity(i);
                 }
 
 
                 else if(id == R.id.aboutus){
-                    Toast.makeText(Manager.this,"About Us",Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(Manager.this, AboutUs.class);
+                    startActivity(i);
                 }
                 else if(id == R.id.logout){
                     FirebaseAuth.getInstance().signOut();
@@ -73,15 +76,78 @@ public class Manager extends AppCompatActivity {
                 StockFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
                 PosFragment.class, null);
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
+        AddStaffFragment addStaffFragment = (AddStaffFragment)getSupportFragmentManager().findFragmentByTag("AddStaff");
+        ViewStaffFragment viewStaffFragment = (ViewStaffFragment)getSupportFragmentManager().findFragmentByTag("ViewStaff");
+        if(
+                (addStaffFragment != null && addStaffFragment.isVisible() && item.getItemId() == android.R.id.home) ||
+                (viewStaffFragment != null && viewStaffFragment.isVisible() && item.getItemId() == android.R.id.home)
+        ) {
+            android.support.v4.app.FragmentManager fm  = getSupportFragmentManager();
+            // Fragment prevFrag = new StaffFragment();
+
+            fm.popBackStack();
+            /*
+            fm.beginTransaction()
+                    .replace(R.id.realtabcontent, prevFrag)
+                    .addToBackStack(null)
+                    .commit();
+            */
+            mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
+            mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+
+            mTabHost.addTab(mTabHost.newTabSpec("Staff").setIndicator("Staff"),
+                    StaffFragment.class, null);
+            mTabHost.addTab(mTabHost.newTabSpec("Member").setIndicator("Member"),
+                    MemberFragment.class, null);
+            mTabHost.addTab(mTabHost.newTabSpec("Stock").setIndicator("Stock"),
+                    StockFragment.class, null);
+            mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
+                    PosFragment.class, null);
+            mTabHost.setCurrentTab(1);
+            mTabHost.setCurrentTab(0);
+            return true;
+        }
         return  abdt.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
+        AddStaffFragment addStaffFragment = (AddStaffFragment)getSupportFragmentManager().findFragmentByTag("AddStaff");
+        ViewStaffFragment viewStaffFragment = (ViewStaffFragment)getSupportFragmentManager().findFragmentByTag("ViewStaff");
+        if(
+                (addStaffFragment != null && addStaffFragment.isVisible()) ||
+                (viewStaffFragment != null && viewStaffFragment.isVisible())
+        ) {
+            android.support.v4.app.FragmentManager fm  = getSupportFragmentManager();
+            // Fragment prevFrag = new StaffFragment();
+
+            fm.popBackStack();
+            /*
+            fm.beginTransaction()
+                    .replace(R.id.realtabcontent, prevFrag)
+                    .addToBackStack(null)
+                    .commit();
+            */
+            mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
+            mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+
+            mTabHost.addTab(mTabHost.newTabSpec("Staff").setIndicator("Staff"),
+                    StaffFragment.class, null);
+            mTabHost.addTab(mTabHost.newTabSpec("Member").setIndicator("Member"),
+                    MemberFragment.class, null);
+            mTabHost.addTab(mTabHost.newTabSpec("Stock").setIndicator("Stock"),
+                    StockFragment.class, null);
+            mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
+                    PosFragment.class, null);
+            mTabHost.setCurrentTab(1);
+            mTabHost.setCurrentTab(0);
+            return;
+        }
         new AlertDialog.Builder(this)
                 .setMessage("Are you sure you want to exit?")
                 .setCancelable(false)

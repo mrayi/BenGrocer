@@ -1,5 +1,6 @@
 package com.lu.lianchyn.bengrocer;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -21,6 +22,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -31,6 +34,14 @@ public class MainActivity extends AppCompatActivity {
     private Button btLogin;
     private String email;
     private String password;
+
+    public static String name;
+    public static String position;
+    public static String icno;
+    public static String salary;
+    public static String sid;
+    public static String address;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null) {
+            final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Please Wait...","Processing...", true);
             DocumentReference docRef = db.collection("Staff").document(user.getUid());
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -56,15 +68,24 @@ public class MainActivity extends AppCompatActivity {
                         if (document.exists()) {
                             Intent i;
 
+                            name = (String) document.get("Name");
+                            position = (String) document.get("Position");
+                            icno = (String) document.get("IC_NO");
+                            salary = (String) document.get("Salary").toString();
+                            sid = (String) document.get("sid");
+                            address = (String) document.get("Address");
+
+                            progressDialog.dismiss();
+
                             String position = (String) document.get("Position");
                             switch(position){
-                                /*case "Manager":
+
+                                case "Manager":
                                     i = new Intent(MainActivity.this, Manager.class);
                                     startActivity(i);
                                     finish();
                                     break;
-*/
-                                //changes
+
                                 case "Inventory Staff":
                                     i = new Intent(MainActivity.this, InventoryStaff.class);
                                     startActivity(i);
@@ -94,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void login(View v) {
+        final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Please Wait...","Processing...", true);
+
         ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
 
@@ -130,8 +153,16 @@ public class MainActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
+
+                                            name = (String) document.get("Name");
+                                            position = (String) document.get("Position");
+                                            icno = (String) document.get("IC_NO");
+                                            salary = (String) document.get("Salary").toString();
+                                            sid = (String) document.get("sid");
+                                            address = (String) document.get("Address");
                                             // Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                                             Intent i;
+                                            progressDialog.dismiss();
                                             String position = (String) document.get("Position");
                                             switch(position) {
                                                 case "Manager":
@@ -139,9 +170,8 @@ public class MainActivity extends AppCompatActivity {
                                                     startActivity(i);
                                                     finish();
                                                     break;
-                                                //changes
                                                 case "Inventory Staff":
-                                                    i = new Intent(MainActivity.this,  InventoryStaff.class);
+                                                    i = new Intent(MainActivity.this, InventoryStaff.class);
                                                     startActivity(i);
                                                     finish();
                                                     break;

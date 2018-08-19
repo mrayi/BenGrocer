@@ -6,6 +6,25 @@
     <string name="password">Password</string>
     <string name="log_in">LOG IN</string>
     <string name="search">Search...</string>
+    <string name="confirn_password">Confirm Password</string>
+    <string name="address">Address</string>
+    <string name="ic_no">IC NO</string>
+    <string name="name">Name</string>
+    <string name="position">Position</string>
+    <string name="salary">Salary</string>
+    <string name="create_staff">Create Staff</string>
+    <string name="exp_email">e.g. abc@gmail.com</string>
+    <string name="exp_password">e.g. 123456</string>
+    <string name="exp_confirm">e.g. 123456</string>
+    <string name="exp_address">e.g. B 18, Jalan Prima Setapak</string>
+    <string name="exp_ic">e.g. 951010016043</string>
+    <string name="exp_name">e.g. Liang Wei</string>
+    <string-array name="positions">
+        <item>Manager</item>
+        <item>Inventory Staff</item>
+        <item>Cashier</item>
+    </string-array>
+    <string name="exp_sal">e.g. 3211</string>
 
     <!-- temp -->
     <string name="manager">Manager</string>
@@ -26,6 +45,7 @@
     <string name="StockBtn">Stock</string>
     <string name="ReportBtn">Report</string>
     <string name="SupplierBtn">Supplier</string>
+    <string name="sid">sid</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -39,4 +59,16 @@
     <string name="Category">Category</string>
     <string name="SupName">Supplier Name</string>
     <string name="done">Done</string>
+    <string name="Remove">Remove</string>
+    <string name="Insert">Insert</string>
+    <string name="Total">Total:</string>
+    <string name="InsertItemID">Insert Item ID</string>
+    <string name="Quantity">Quantity</string>
+    <string name="ItemID">Item ID</string>
+    <string name="ItemName">Item Name</string>
+    <string name="ItemQuantity">Qty</string>
+    <string name="Price">Price (RM)</string>
+    <string name="SubTotal">Sub Total</string>
+    <string name="userPayAmount">User Pay Amount</string>
+    <string name="RM">(RM)</string>
 </resources>
