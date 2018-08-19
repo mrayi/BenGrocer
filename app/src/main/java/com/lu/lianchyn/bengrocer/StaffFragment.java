@@ -175,6 +175,8 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
         addStaff.setOnClickListener(this);
         ImageButton viewStaff = (ImageButton) v.findViewById(R.id.viewStaff);
         viewStaff.setOnClickListener(this);
+        ImageButton editStaff = (ImageButton) v.findViewById(R.id.editStaff);
+        editStaff.setOnClickListener(this);
 
         dl = (DrawerLayout)getActivity().findViewById(R.id.dl);
         abdt = new ActionBarDrawerToggle(getActivity(),dl,R.string.Open,R.string.Close);
@@ -284,6 +286,34 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
 
                     fm.beginTransaction()
                             .replace(R.id.realtabcontent, nextFrag2, "ViewStaff")
+                            .addToBackStack(null)
+                            .commit();
+                }
+
+                break;
+            case R.id.editStaff:
+                if(selectedDat != null) {
+                    Bundle bundle3 = new Bundle();
+                    bundle3.putString("uid", selectedDat[0]);
+                    bundle3.putString("address", selectedDat[1]);
+                    bundle3.putString("email", selectedDat[2]);
+                    bundle3.putString("ic", selectedDat[3]);
+                    bundle3.putString("name", selectedDat[4]);
+                    bundle3.putString("position", selectedDat[5]);
+                    bundle3.putString("salary", selectedDat[6]);
+                    bundle3.putString("sid", selectedDat[7]);
+
+                    mTabHost = (FragmentTabHost)getActivity().findViewById(android.R.id.tabhost);
+                    mTabHost.setup(getActivity(), ((AppCompatActivity)getActivity()).getSupportFragmentManager(), R.id.realtabcontent);
+
+                    mTabHost.clearAllTabs();
+
+                    fm  = getFragmentManager();
+                    EditStaffFragment nextFrag3= new EditStaffFragment();
+                    nextFrag3.setArguments(bundle3);
+
+                    fm.beginTransaction()
+                            .replace(R.id.realtabcontent, nextFrag3, "EditStaff")
                             .addToBackStack(null)
                             .commit();
                 }
