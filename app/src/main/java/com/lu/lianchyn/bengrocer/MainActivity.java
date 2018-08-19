@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null) {
+            final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Please Wait...","Processing...", true);
             DocumentReference docRef = db.collection("Staff").document(user.getUid());
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -73,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
                             salary = (String) document.get("Salary").toString();
                             sid = (String) document.get("sid");
                             address = (String) document.get("Address");
+
+                            progressDialog.dismiss();
 
                             String position = (String) document.get("Position");
                             switch(position){

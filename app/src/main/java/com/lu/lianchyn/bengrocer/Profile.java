@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -47,7 +48,11 @@ public class Profile extends AppCompatActivity {
         addressID.setText(address);
 
     }
-
+    public void btnEditProfile(View v){
+        Intent i = new Intent(Profile.this, EditProfile.class);
+        startActivity(i);
+        finish();
+    }
     public void btnChangePassword(View v){
         Intent i = new Intent(Profile.this, ChangePassword.class);
         startActivity(i);
