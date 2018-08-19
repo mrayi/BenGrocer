@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -74,8 +76,14 @@ public class AddStaffFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
         this.setHasOptionsMenu(true);
+
+        // position spinner
+        Spinner position = (Spinner) v.findViewById(R.id.position);
+        ArrayAdapter<String> myAdapter = new ArrayAdapter<String> (getActivity(),
+                android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.positions));
+        myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        position.setAdapter(myAdapter);
 
         return v;
     }
