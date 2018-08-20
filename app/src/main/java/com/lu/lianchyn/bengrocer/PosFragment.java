@@ -21,15 +21,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -45,7 +53,6 @@ public class PosFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private EditText editTextStaffID;
     private EditText editTextStaffName;
@@ -58,8 +65,15 @@ public class PosFragment extends Fragment {
     private Button buttonAdd;
     private Button buttonRemove;
     private TextView textViewTotal;
+    private Button buttonPay;
+    private EditText editTextPayment;
+    private String nextID;
+    private int nextInvoiceItemID;
+    private ItemAdapter itemAdapter;
+    private Button buttonClear;
 
 
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -118,10 +132,12 @@ public class PosFragment extends Fragment {
         buttonAdd = v.findViewById(R.id.buttonAdd);
         buttonRemove = v.findViewById(R.id.buttonRemove);
         textViewTotal = v.findViewById(R.id.textViewTotal);
+        buttonPay = v.findViewById(R.id.buttonPay);
+        editTextPayment = v.findViewById(R.id.editTextPayAmount);
+        buttonClear = v.findViewById(R.id.buttonClear);
 
         //get and show the staff id and name
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
 
         DocumentReference docRef = db.collection("Staff").document(user.getUid());
 
@@ -186,7 +202,7 @@ public class PosFragment extends Fragment {
 
         //init item list view
         itemList = new ArrayList<>();
-        final ItemAdapter itemAdapter = new ItemAdapter();
+        itemAdapter = new ItemAdapter();
         listViewItem.setAdapter(itemAdapter);
 
 
@@ -216,7 +232,7 @@ public class PosFragment extends Fragment {
                                                 } else {
                                                     itemList.get(i).addQuantity(Integer.parseInt(editTextQuantity.getText().toString()));
                                                     itemAdapter.notifyDataSetChanged();
-                                                    caltotal();
+                                                    calTotal();
                                                     Toast.makeText(getActivity(), "Successfully added " + editTextQuantity.getText() + " of " + itemList.get(i).getName(), Toast.LENGTH_SHORT).show();
                                                 }
                                                 exist = true;
@@ -230,7 +246,7 @@ public class PosFragment extends Fragment {
                                                 Item item = new Item(itemID, itemName, quantity, price);
                                                 itemList.add(item);
                                                 itemAdapter.notifyDataSetChanged();
-                                                caltotal();
+                                                calTotal();
                                                 Toast.makeText(getActivity(), "Successfully added " + quantity + " of " + itemName, Toast.LENGTH_SHORT).show();
                                             } else {
                                                 if (quantity > stock) {
@@ -279,26 +295,26 @@ public class PosFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if(!(editTextItemID.getText().toString().matches("")||editTextQuantity.getText().toString().matches("") || editTextQuantity.getText().toString().matches("0")) ){
+                if (!(editTextItemID.getText().toString().matches("") || editTextQuantity.getText().toString().matches("") || editTextQuantity.getText().toString().matches("0"))) {
                     int quantity = Integer.parseInt(editTextQuantity.getText().toString());
                     boolean exist = false;
                     for (int i = 0; i < itemList.size(); i++) {
                         if (editTextItemID.getText().toString().matches(itemList.get(i).getId())) {
                             if ((quantity > itemList.get(i).getQuantity())) {
                                 Toast.makeText(getActivity(), "Quantity entered is exceed", Toast.LENGTH_SHORT).show();
-                                Toast.makeText(getActivity(), "There are " + itemList.get(i).getQuantity() + " of " + itemList.get(i).getName() +"in list", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "There are " + itemList.get(i).getQuantity() + " of " + itemList.get(i).getName() + "in list", Toast.LENGTH_SHORT).show();
                             } else {
                                 final int index = i;
                                 final int qty = quantity;
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                builder.setMessage("Are remove "+quantity+ " of "+itemList.get(index).getName()+"?")
+                                builder.setMessage("Are you sure to remove " + quantity + " of " + itemList.get(index).getName() + "?")
                                         .setCancelable(false)
                                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
                                                 itemList.get(index).minusQuantity(qty);
 
                                                 itemAdapter.notifyDataSetChanged();
-                                                caltotal();
+                                                calTotal();
                                                 Toast.makeText(getActivity(), "Successfully removed " + editTextQuantity.getText() + " of " + itemList.get(index).getName(), Toast.LENGTH_SHORT).show();
                                             }
                                         })
@@ -316,7 +332,7 @@ public class PosFragment extends Fragment {
                     if (!exist) {
                         Toast.makeText(getActivity(), "Item ID not in list", Toast.LENGTH_SHORT).show();
                     }
-                }else{
+                } else {
                     if (editTextItemID.getText().toString().matches(""))
                         Toast.makeText(getActivity(), "Please key in item id", Toast.LENGTH_SHORT).show();
                     else
@@ -325,21 +341,141 @@ public class PosFragment extends Fragment {
             }
         });
 
+
+        buttonPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (!(editTextPayment.getText().toString().matches("") || editTextPayment.getText().toString().matches("0"))) {
+                    double payment = Double.parseDouble(editTextPayment.getText().toString());
+                    double total = 0;
+                    for (int i = 0; i < itemList.size(); i++)
+                        total += itemList.get(i).getPrice() * itemList.get(i).getQuantity();
+
+                    if (total == 0) {
+                        Toast.makeText(getActivity(), "There is no item in the pay list", Toast.LENGTH_SHORT).show();
+                    } else if (payment < total) {
+                        Toast.makeText(getActivity(), "Pay Amount is not enough", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Query docRe = db.collection("Invoice").orderBy("Date", Query.Direction.DESCENDING).limit(1);
+                        docRe.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    nextID = document.getId();
+
+                                }
+                            }
+                        });
+                        Query docListRef = db.collection("Invoice_List").orderBy("id", Query.Direction.DESCENDING).limit(1);
+
+                        docListRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    nextInvoiceItemID = document.getDouble("id").intValue();
+
+                                }
+                            }
+                        });
+
+                        double left = payment - total;
+
+
+                        if (nextID != null) {
+                            nextID = "POS" + String.format("%05d", Integer.parseInt(nextID.replace("POS", "")) + 1);
+
+
+                            Map<String, Object> invoice = new HashMap<>();
+                            invoice.put("Date", FieldValue.serverTimestamp());
+                            invoice.put("Staff_ID", user.getUid());
+                            invoice.put("Total_Amount", total);
+
+                            db.collection("Invoice").document(nextID)
+                                    .set(invoice)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(getActivity(), "Success insert invoice", Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getActivity(), "Failed insert invoice", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                            for (int i = 0; i < itemList.size(); i++) {
+                                nextInvoiceItemID++;
+
+                                Map<String, Object> invoiceList = new HashMap<>();
+                                invoiceList.put("Invoice_ID", nextID);
+                                invoiceList.put("Price", itemList.get(i).getPrice());
+                                invoiceList.put("Qty", itemList.get(i).getQuantity());
+                                invoiceList.put("Stock_ID", itemList.get(i).getId());
+                                invoiceList.put("id", nextInvoiceItemID);
+
+                                db.collection("Invoice_List").document(Integer.toString(nextInvoiceItemID))
+                                        .set(invoiceList)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(getActivity(), "Success insert invoice list", Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(getActivity(), "Failed insert invoice list", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+
+                            }
+                            resetLayout();
+
+                        }
+
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Payment cannot be empty or 0", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+
+
+        buttonClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resetLayout();
+            }
+        });
         return v;
     }
 
     //update total view
-    public void caltotal(){
+    public void calTotal() {
         double total = 0;
-        for(int i = 0; i<itemList.size();i++)
-            total +=itemList.get(i).getPrice() * itemList.get(i).getQuantity();
+        for (int i = 0; i < itemList.size(); i++)
+            total += itemList.get(i).getPrice() * itemList.get(i).getQuantity();
 
-        textViewTotal.setText("Total: " + String.format("%.2f",total));
-
-
+        textViewTotal.setText("Total: " + String.format("%.2f", total));
 
 
     }
+
+    public void resetLayout(){
+        editTextMemberID.setText("");
+        editTextMemberName.setText("");
+        itemList.clear();
+        itemAdapter.notifyDataSetChanged();
+        editTextItemID.setText("");
+        editTextQuantity.setText("");
+        textViewTotal.setText("Total: ");
+        editTextPayment.setText("");
+    }
+
 
 
     // TODO: Rename method, update argument and hook method into UI event

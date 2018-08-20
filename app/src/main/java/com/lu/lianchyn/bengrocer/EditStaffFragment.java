@@ -250,7 +250,7 @@ public class EditStaffFragment extends Fragment implements View.OnClickListener 
                                             StockFragment.class, null);
                                     mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
                                             PosFragment.class, null);
-                                    mTabHost.setCurrentTab(1);
+                                    mTabHost.setCurrentTab(3);
                                     mTabHost.setCurrentTab(0);
                                     Toast.makeText(getActivity().getBaseContext(), "Staff edited successfully.", Toast.LENGTH_LONG).show();
                                 }

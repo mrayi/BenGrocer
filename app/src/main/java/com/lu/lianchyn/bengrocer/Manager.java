@@ -146,7 +146,7 @@ public class Manager extends AppCompatActivity {
         android.support.v4.app.FragmentManager fm  = getSupportFragmentManager();
         // Fragment prevFrag = new StaffFragment();
 
-        fm.popBackStack();
+        fm.popBackStack(null, fm.POP_BACK_STACK_INCLUSIVE);
             /*
             fm.beginTransaction()
                     .replace(R.id.realtabcontent, prevFrag)
@@ -154,7 +154,6 @@ public class Manager extends AppCompatActivity {
                     .commit();
             */
         mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
-        mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
         mTabHost.addTab(mTabHost.newTabSpec("Staff").setIndicator("Staff"),
                 StaffFragment.class, null);
@@ -164,7 +163,7 @@ public class Manager extends AppCompatActivity {
                 StockFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
                 PosFragment.class, null);
-        mTabHost.setCurrentTab(1);
+        mTabHost.setCurrentTab(3);
         mTabHost.setCurrentTab(0);
     };
 }
