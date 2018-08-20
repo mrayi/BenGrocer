@@ -2,6 +2,7 @@ package com.lu.lianchyn.bengrocer;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -78,6 +79,7 @@ public class PosFragment extends Fragment {
     private int remain;
     private int memberPoint;
     private boolean memberExist;
+    private String memberEmail;
 
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -143,6 +145,7 @@ public class PosFragment extends Fragment {
         buttonClear = v.findViewById(R.id.buttonClear);
 
         memberExist= false;
+        memberEmail = "";
 
         //get and show the staff id and name
 
@@ -180,6 +183,7 @@ public class PosFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 editTextMemberName.setText("");
+                memberEmail = "";
                 memberExist=false;
             }
 
@@ -195,9 +199,11 @@ public class PosFragment extends Fragment {
                                         editTextMemberName.setText(documentSnapshot.getString("F_NAME") + " " + documentSnapshot.getString("L_NAME"));
                                         memberPoint = documentSnapshot.getDouble("POINTS").intValue();
                                         memberExist = true;
+                                        memberEmail = documentSnapshot.getString("EMAIL");
                                     } else {
                                         editTextMemberName.setText("Member Not Found");
                                         memberExist = false;
+                                        memberEmail = "";
                                     }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -400,7 +406,7 @@ public class PosFragment extends Fragment {
                             Calendar c = Calendar.getInstance();
                             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             //Receipt init
-                            receipt = "BenGrocer"+System.getProperty("line.separator")+df.format(c.getTime())+System.getProperty("line.separator")+"By StaffID: "+editTextStaffID+System.getProperty("line.separator")+String.format("%8s %30s %5s %10s %10s","Item ID","Name", "Qty", "Price", "Sub Total")+System.getProperty("line.separator");
+                            receipt = "BenGrocer"+System.getProperty("line.separator")+df.format(c.getTime())+System.getProperty("line.separator")+"Cashier ID: "+editTextStaffID.getText().toString()+System.getProperty("line.separator")+"Cashier Name: "+editTextStaffName.getText().toString()+System.getProperty("line.separator")+String.format("%8s %30s %5s %10s %10s","Item ID","Name", "Qty", "Price", "Sub Total")+System.getProperty("line.separator");
 
                             Map<String, Object> invoice = new HashMap<>();
                             invoice.put("Date", FieldValue.serverTimestamp());
@@ -471,12 +477,21 @@ public class PosFragment extends Fragment {
                                     db.collection("Member").document(editTextMemberID.getText().toString())
                                             .set(member, SetOptions.merge());
 
-                                    receipt+= System.getProperty("line.separator")+"Member ID: "+editTextMemberID.getText().toString()+System.getProperty("line.separator")+"Member Name: "+editTextMemberName.getText().toString() +System.getProperty("line.separator")+ "Points Earned: " +(int) total + System.getProperty("line.separator") + "Thank You!";
+                                    receipt+= System.getProperty("line.separator")+"Member ID: "+editTextMemberID.getText().toString()+System.getProperty("line.separator")+"Member Name: "+editTextMemberName.getText().toString() +System.getProperty("line.separator")+ "Points Earned: " +(int) total ;
 
 
-                                    Toast.makeText(getActivity(), receipt, Toast.LENGTH_LONG).show();
+
+
+
                                 }
 
+                                Toast.makeText(getActivity(), receipt, Toast.LENGTH_LONG).show();
+
+                                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                                        "mailto",memberEmail, null));
+                                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "BenGrocer Receipt");
+                                emailIntent.putExtra(Intent.EXTRA_TEXT, receipt);
+                                startActivity(Intent.createChooser(emailIntent, "Send email..."));
 
                             }
                             resetLayout();
