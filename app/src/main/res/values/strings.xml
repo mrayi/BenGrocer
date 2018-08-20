@@ -48,6 +48,19 @@
     <string name="sid">sid</string>
     <string name="submit">Submit</string>
     <string name="reset">Reset</string>
+    <string name="fname">First Name</string>
+    <string name="hpno">HPNO</string>
+    <string name="lname">Last Name</string>
+    <string name="card">M_Card_No</string>
+    <string name="point">Points</string>
+    <string name="status">Status</string>
+    <string name="exp_fname">Desmond</string>
+    <string name="exp_hpno">01223245867</string>
+    <string name="exp_lname">Chow</string>
+    <string name="exp_card">980000001</string>
+    <string name="exp_point">149</string>
+    <string name="exp_status">Active</string>
+    <string name="create_member">Create Member</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -72,4 +85,6 @@
     <string name="RM">(RM)</string>
     <string name="Save">Save</string>
     <string name="Delete">Delete</string>
+    <string name="Quantity">Quantity</string>
+    <string name="Price">Price</string>
 </resources>

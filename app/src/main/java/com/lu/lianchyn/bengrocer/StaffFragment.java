@@ -68,6 +68,7 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
     private int staff_count = 0;
     private String[][] fullDat;
     private String[] selectedDat = null;
+    private View v;
 
     public StaffFragment() {
         // Required empty public constructor
@@ -106,6 +107,7 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View v =  inflater.inflate(R.layout.fragment_staff, container, false);
+        this.v = v;
 
         db = FirebaseFirestore.getInstance();
         loadList();
@@ -363,7 +365,7 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
                         }
 
                         setHasOptionsMenu(true);
-                        lstView = (ListView) getActivity().findViewById(R.id.lstView);
+                        lstView = (ListView) v.findViewById(R.id.lstView);
                         ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, lstSource);
                         lstView.setAdapter(adapter);
                         adapter.sort(new Comparator<String>() {

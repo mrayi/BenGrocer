@@ -59,6 +59,7 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
     private int member_count = 0;
     private String[][] fullDat;
     private String[] selectedDat = null;
+    private View v;
 
     public MemberFragment() {
         // Required empty public constructor
@@ -88,6 +89,7 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View v =  inflater.inflate(R.layout.fragment_member, container, false);
+        this.v = v;
 
         db = FirebaseFirestore.getInstance();
         loadList();
@@ -152,14 +154,14 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
                 return true;
             }
         });
-        /*
+
         ImageButton addMember = (ImageButton) v.findViewById(R.id.addMember);
         addMember.setOnClickListener(this);
         ImageButton viewMember = (ImageButton) v.findViewById(R.id.viewMember);
         viewMember.setOnClickListener(this);
         ImageButton editMember = (ImageButton) v.findViewById(R.id.editMember);
         editMember.setOnClickListener(this);
-        */
+
         dl = (DrawerLayout)getActivity().findViewById(R.id.dl);
         abdt = new ActionBarDrawerToggle(getActivity(),dl,R.string.Open,R.string.Close);
         abdt.setDrawerIndicatorEnabled(true);
@@ -221,7 +223,7 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v){
         FragmentManager fm  = getFragmentManager();
-        /*switch(v.getId()) {
+        switch(v.getId()) {
             case R.id.addMember:
                 Bundle bundle = new Bundle();
                 bundle.putString("member_count", Integer.toString(member_count));
@@ -240,7 +242,7 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
                         .commit();
 
                 break;
-            case R.id.viewMember:
+            /*case R.id.viewMember:
                 if(selectedDat != null) {
                     Bundle bundle2 = new Bundle();
                     bundle2.putString("address", selectedDat[1]);
@@ -294,8 +296,8 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
                             .commit();
                 }
 
-                break;
-        }*/
+                break;*/
+        }
     }
 
     @Override
@@ -336,7 +338,7 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
                         }
 
                         setHasOptionsMenu(true);
-                        lstView_m = (ListView) getActivity().findViewById(R.id.lstView_m);
+                        lstView_m = (ListView) v.findViewById(R.id.lstView_m);
                         ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, lstSource);
                         lstView_m.setAdapter(adapter);
                         adapter.sort(new Comparator<String>() {

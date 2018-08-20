@@ -84,6 +84,7 @@ public class Manager extends AppCompatActivity {
         AddStaffFragment addStaffFragment = (AddStaffFragment)getSupportFragmentManager().findFragmentByTag("AddStaff");
         ViewStaffFragment viewStaffFragment = (ViewStaffFragment)getSupportFragmentManager().findFragmentByTag("ViewStaff");
         EditStaffFragment editStaffFragment = (EditStaffFragment)getSupportFragmentManager().findFragmentByTag("EditStaff");
+        AddMemberFragment addMemberFragment = (AddMemberFragment)getSupportFragmentManager().findFragmentByTag("AddMember");
         if(
                 (addStaffFragment != null && addStaffFragment.isVisible() && item.getItemId() == android.R.id.home) ||
                 (viewStaffFragment != null && viewStaffFragment.isVisible() && item.getItemId() == android.R.id.home)
@@ -101,6 +102,10 @@ public class Manager extends AppCompatActivity {
                         }
                     })
                     .setNegativeButton("No", null).show();
+            return true;
+        } else if(
+                (addMemberFragment != null && addMemberFragment.isVisible() && item.getItemId() == android.R.id.home)) {
+            rebuild_m();
             return true;
         }
         return  abdt.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
@@ -165,5 +170,30 @@ public class Manager extends AppCompatActivity {
                 PosFragment.class, null);
         mTabHost.setCurrentTab(3);
         mTabHost.setCurrentTab(0);
+    };
+
+    public void rebuild_m() {
+        android.support.v4.app.FragmentManager fm  = getSupportFragmentManager();
+        // Fragment prevFrag = new StaffFragment();
+
+        fm.popBackStack(null, fm.POP_BACK_STACK_INCLUSIVE);
+            /*
+            fm.beginTransaction()
+                    .replace(R.id.realtabcontent, prevFrag)
+                    .addToBackStack(null)
+                    .commit();
+            */
+        mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
+
+        mTabHost.addTab(mTabHost.newTabSpec("Staff").setIndicator("Staff"),
+                StaffFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("Member").setIndicator("Member"),
+                MemberFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("Stock").setIndicator("Stock"),
+                StockFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
+                PosFragment.class, null);
+        mTabHost.setCurrentTab(3);
+        mTabHost.setCurrentTab(1);
     };
 }
