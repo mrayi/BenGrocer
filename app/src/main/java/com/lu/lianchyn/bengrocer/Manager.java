@@ -86,6 +86,7 @@ public class Manager extends AppCompatActivity {
         EditStaffFragment editStaffFragment = (EditStaffFragment)getSupportFragmentManager().findFragmentByTag("EditStaff");
         AddMemberFragment addMemberFragment = (AddMemberFragment)getSupportFragmentManager().findFragmentByTag("AddMember");
         ViewMemberFragment viewMemberFragment = (ViewMemberFragment)getSupportFragmentManager().findFragmentByTag("ViewMember");
+        EditMemberFragment editMemberFragment = (EditMemberFragment)getSupportFragmentManager().findFragmentByTag("EditMember");
         if(
                 (addStaffFragment != null && addStaffFragment.isVisible() && item.getItemId() == android.R.id.home) ||
                 (viewStaffFragment != null && viewStaffFragment.isVisible() && item.getItemId() == android.R.id.home)
@@ -111,6 +112,18 @@ public class Manager extends AppCompatActivity {
                 ) {
             rebuild_m();
             return true;
+        } else if((editMemberFragment != null && editMemberFragment.isVisible() && item.getItemId() == android.R.id.home)) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Discard change?").setCancelable(false)
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            rebuild_m();
+                            dialog.cancel();
+                        }
+                    })
+                    .setNegativeButton("No", null).show();
+            return true;
         }
         return  abdt.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
@@ -122,6 +135,7 @@ public class Manager extends AppCompatActivity {
         EditStaffFragment editStaffFragment = (EditStaffFragment)getSupportFragmentManager().findFragmentByTag("EditStaff");
         AddMemberFragment addMemberFragment = (AddMemberFragment)getSupportFragmentManager().findFragmentByTag("AddMember");
         ViewMemberFragment viewMemberFragment = (ViewMemberFragment)getSupportFragmentManager().findFragmentByTag("ViewMember");
+        EditMemberFragment editMemberFragment = (EditMemberFragment)getSupportFragmentManager().findFragmentByTag("EditMember");
         if(
                 (addStaffFragment != null && addStaffFragment.isVisible()) ||
                 (viewStaffFragment != null && viewStaffFragment.isVisible())
@@ -145,6 +159,18 @@ public class Manager extends AppCompatActivity {
                 (viewMemberFragment != null && viewMemberFragment.isVisible())
                 ) {
             rebuild_m();
+            return;
+        } else if(editMemberFragment != null && editMemberFragment.isVisible()) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Discard change?").setCancelable(false)
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            rebuild_m();
+                            dialog.cancel();
+                        }
+                    })
+                    .setNegativeButton("No", null).show();
             return;
         }
         new AlertDialog.Builder(this)

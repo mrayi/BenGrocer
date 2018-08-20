@@ -270,17 +270,18 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
                 }
 
                 break;
-            /*case R.id.editMember:
+            case R.id.editMember:
                 if(selectedDat != null) {
                     Bundle bundle3 = new Bundle();
-                    bundle3.putString("uid", selectedDat[0]);
-                    bundle3.putString("address", selectedDat[1]);
-                    bundle3.putString("email", selectedDat[2]);
-                    bundle3.putString("ic", selectedDat[3]);
-                    bundle3.putString("name", selectedDat[4]);
-                    bundle3.putString("position", selectedDat[5]);
-                    bundle3.putString("salary", selectedDat[6]);
-                    bundle3.putString("sid", selectedDat[7]);
+                    bundle3.putString("mid", selectedDat[0]);
+                    bundle3.putString("email", selectedDat[1]);
+                    bundle3.putString("fname", selectedDat[2]);
+                    bundle3.putString("hpno", selectedDat[3]);
+                    bundle3.putString("icno", selectedDat[4]);
+                    bundle3.putString("lname", selectedDat[5]);
+                    bundle3.putString("card", selectedDat[6]);
+                    bundle3.putString("point", selectedDat[7]);
+                    bundle3.putString("status", selectedDat[8]);
 
                     mTabHost = (FragmentTabHost)getActivity().findViewById(android.R.id.tabhost);
                     mTabHost.setup(getActivity(), ((AppCompatActivity)getActivity()).getSupportFragmentManager(), R.id.realtabcontent);
@@ -297,7 +298,7 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
                             .commit();
                 }
 
-                break;*/
+                break;
         }
     }
 
