@@ -1,6 +1,7 @@
 package com.lu.lianchyn.bengrocer;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.internal.NavigationMenu;
@@ -33,6 +34,9 @@ public class StockActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private List<String> mlist = new ArrayList<>();
     private static final String TAG = "StockMgmt";
+    private String id;
+    private ArrayList<String> stockid = new ArrayList<String>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +76,10 @@ public class StockActivity extends AppCompatActivity {
                 for(DocumentSnapshot snapshot : documentSnapshots){
 
                     mlist.add(snapshot.getString("Stock_ID") + " " +snapshot.getString("Name") + "\n RM"  +snapshot.getDouble("Price") + "\t Qty: "
-                            + snapshot.getDouble("Qty"));
+                            + snapshot.getDouble("Qty").intValue());
+
+                    stockid.add(snapshot.getString("Stock_ID"));
+
                 }
 
 
@@ -86,7 +93,7 @@ public class StockActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(StockActivity.this, EditActivity.class);
-                    intent.putExtra("Stock_ID",listview.getItemIdAtPosition(position));
+                intent.putExtra("Stock_ID",stockid.get(position).toString());
                     startActivity(intent);
             }
         });
@@ -124,10 +131,6 @@ public class StockActivity extends AppCompatActivity {
             quantity = quantity+qty;
         }
     }
-    public void onBackPressed() {
-       // FragmentManager fm = getFragmentManager();
-        Intent intent = new Intent(StockActivity.this, StockFragment.class);
-        startActivity(intent);
-    }
+
 
 }
