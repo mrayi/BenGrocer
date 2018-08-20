@@ -87,6 +87,4 @@
     <string name="RM">(RM)</string>
     <string name="Save">Save</string>
     <string name="Delete">Delete</string>
-    <string name="Quantity">Quantity</string>
-    <string name="Price">Price</string>
 </resources>
