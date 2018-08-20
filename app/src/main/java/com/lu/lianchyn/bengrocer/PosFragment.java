@@ -2,6 +2,7 @@ package com.lu.lianchyn.bengrocer;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,8 +35,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,7 +75,11 @@ public class PosFragment extends Fragment {
     private int nextInvoiceItemID;
     private ItemAdapter itemAdapter;
     private Button buttonClear;
-
+    private String receipt;
+    private int remain;
+    private int memberPoint;
+    private boolean memberExist;
+    private String memberEmail;
 
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -136,6 +144,9 @@ public class PosFragment extends Fragment {
         editTextPayment = v.findViewById(R.id.editTextPayAmount);
         buttonClear = v.findViewById(R.id.buttonClear);
 
+        memberExist= false;
+        memberEmail = "";
+
         //get and show the staff id and name
 
 
@@ -172,6 +183,8 @@ public class PosFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 editTextMemberName.setText("");
+                memberEmail = "";
+                memberExist=false;
             }
 
             @Override
@@ -184,8 +197,13 @@ public class PosFragment extends Fragment {
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     if (documentSnapshot.exists()) {
                                         editTextMemberName.setText(documentSnapshot.getString("F_NAME") + " " + documentSnapshot.getString("L_NAME"));
+                                        memberPoint = documentSnapshot.getDouble("POINTS").intValue();
+                                        memberExist = true;
+                                        memberEmail = documentSnapshot.getString("EMAIL");
                                     } else {
                                         editTextMemberName.setText("Member Not Found");
+                                        memberExist = false;
+                                        memberEmail = "";
                                     }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -243,7 +261,7 @@ public class PosFragment extends Fragment {
                                                 String itemID = documentSnapshot.getString("Stock_ID");
                                                 String itemName = documentSnapshot.getString("Name");
                                                 double price = documentSnapshot.getDouble("Price");
-                                                Item item = new Item(itemID, itemName, quantity, price);
+                                                Item item = new Item(itemID, itemName, quantity, price, stock);
                                                 itemList.add(item);
                                                 itemAdapter.notifyDataSetChanged();
                                                 calTotal();
@@ -348,7 +366,7 @@ public class PosFragment extends Fragment {
 
                 if (!(editTextPayment.getText().toString().matches("") || editTextPayment.getText().toString().matches("0"))) {
                     double payment = Double.parseDouble(editTextPayment.getText().toString());
-                    double total = 0;
+                    double total = 0.0;
                     for (int i = 0; i < itemList.size(); i++)
                         total += itemList.get(i).getPrice() * itemList.get(i).getQuantity();
 
@@ -385,6 +403,10 @@ public class PosFragment extends Fragment {
                         if (nextID != null) {
                             nextID = "POS" + String.format("%05d", Integer.parseInt(nextID.replace("POS", "")) + 1);
 
+                            Calendar c = Calendar.getInstance();
+                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            //Receipt init
+                            receipt = "BenGrocer"+System.getProperty("line.separator")+df.format(c.getTime())+System.getProperty("line.separator")+"Cashier ID: "+editTextStaffID.getText().toString()+System.getProperty("line.separator")+"Cashier Name: "+editTextStaffName.getText().toString()+System.getProperty("line.separator")+String.format("%8s %30s %5s %10s %10s","Item ID","Name", "Qty", "Price", "Sub Total")+System.getProperty("line.separator");
 
                             Map<String, Object> invoice = new HashMap<>();
                             invoice.put("Date", FieldValue.serverTimestamp());
@@ -409,6 +431,8 @@ public class PosFragment extends Fragment {
                             for (int i = 0; i < itemList.size(); i++) {
                                 nextInvoiceItemID++;
 
+                                receipt += String.format("%8s %30s %5d %10.2f %10.2f",itemList.get(i).getId(),itemList.get(i).getName(), itemList.get(i).getQuantity(), itemList.get(i).getPrice(), itemList.get(i).getQuantity() * itemList.get(i).getPrice())+System.getProperty("line.separator");
+
                                 Map<String, Object> invoiceList = new HashMap<>();
                                 invoiceList.put("Invoice_ID", nextID);
                                 invoiceList.put("Price", itemList.get(i).getPrice());
@@ -430,6 +454,44 @@ public class PosFragment extends Fragment {
                                                 Toast.makeText(getActivity(), "Failed insert invoice list", Toast.LENGTH_SHORT).show();
                                             }
                                         });
+
+
+                                remain = itemList.get(i).getStock() - itemList.get(i).getQuantity();
+                                Map<String, Object> stock = new HashMap<>();
+                                stock.put("Qty",remain);
+
+                                db.collection("Stock").document(itemList.get(i).getId())
+                                        .set(stock, SetOptions.merge());
+
+
+
+                                receipt += System.getProperty("line.separator") +"Total: "+ total+System.getProperty("line.separator");
+
+                                if(memberExist){
+
+                                     int point = (int) (memberPoint + total);
+                                    Map<String, Object> member = new HashMap<>();
+                                    member.put("POINTS",point);
+
+
+                                    db.collection("Member").document(editTextMemberID.getText().toString())
+                                            .set(member, SetOptions.merge());
+
+                                    receipt+= System.getProperty("line.separator")+"Member ID: "+editTextMemberID.getText().toString()+System.getProperty("line.separator")+"Member Name: "+editTextMemberName.getText().toString() +System.getProperty("line.separator")+ "Points Earned: " +(int) total ;
+
+
+
+
+
+                                }
+
+                                Toast.makeText(getActivity(), receipt, Toast.LENGTH_LONG).show();
+
+                                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                                        "mailto",memberEmail, null));
+                                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "BenGrocer Receipt");
+                                emailIntent.putExtra(Intent.EXTRA_TEXT, receipt);
+                                startActivity(Intent.createChooser(emailIntent, "Send email..."));
 
                             }
                             resetLayout();
@@ -562,11 +624,18 @@ public class PosFragment extends Fragment {
         private int quantity;
         private double price;
 
-        private Item(String id, String name, int quantity, double price) {
+        public int getStock() {
+            return stock;
+        }
+
+        private int stock;
+
+        private Item(String id, String name, int quantity, double price, int stock) {
             this.id = id;
             this.name = name;
             this.quantity = quantity;
             this.price = price;
+            this.stock = stock;
         }
 
         public String getId() {

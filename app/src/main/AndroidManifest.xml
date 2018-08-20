@@ -35,7 +35,8 @@
         <activity
             android:name=".AddStock"
             android:parentActivityName=".StockActivity" />
-        <activity android:name=".EditActivity"></activity>
+        <activity android:name=".EditActivity"
+            android:parentActivityName=".StockActivity"></activity>
     </application>
 
 </manifest>
