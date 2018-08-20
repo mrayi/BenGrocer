@@ -258,7 +258,7 @@ public class AddStaffFragment extends Fragment implements View.OnClickListener {
                                                                 StockFragment.class, null);
                                                         mTabHost.addTab(mTabHost.newTabSpec("POS").setIndicator("POS"),
                                                                 PosFragment.class, null);
-                                                        mTabHost.setCurrentTab(1);
+                                                        mTabHost.setCurrentTab(3);
                                                         mTabHost.setCurrentTab(0);
                                                         mAuth2.signOut();
                                                         Toast.makeText(getActivity().getBaseContext(), "New staff created successfully.", Toast.LENGTH_LONG).show();

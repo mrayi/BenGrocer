@@ -325,13 +325,11 @@ public class StaffFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadList();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadList();
     }
 
     public void loadList() {

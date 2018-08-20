@@ -56,8 +56,6 @@
     <string name="StockName">Name</string>
     <string name="Barcode">Barcode</string>
     <string name="StockDescription">Description</string>
-    <string name="Quantity">Quanitity</string>
-    <string name="Price">Price</string>
     <string name="Category">Category</string>
     <string name="SupName">Supplier Name</string>
     <string name="done">Done</string>
