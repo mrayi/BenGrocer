@@ -242,16 +242,17 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
                         .commit();
 
                 break;
-            /*case R.id.viewMember:
+            case R.id.viewMember:
                 if(selectedDat != null) {
                     Bundle bundle2 = new Bundle();
-                    bundle2.putString("address", selectedDat[1]);
-                    bundle2.putString("email", selectedDat[2]);
-                    bundle2.putString("ic", selectedDat[3]);
-                    bundle2.putString("name", selectedDat[4]);
-                    bundle2.putString("position", selectedDat[5]);
-                    bundle2.putString("salary", selectedDat[6]);
-                    bundle2.putString("sid", selectedDat[7]);
+                    bundle2.putString("email", selectedDat[1]);
+                    bundle2.putString("fname", selectedDat[2]);
+                    bundle2.putString("hpno", selectedDat[3]);
+                    bundle2.putString("icno", selectedDat[4]);
+                    bundle2.putString("lname", selectedDat[5]);
+                    bundle2.putString("card", selectedDat[6]);
+                    bundle2.putString("point", selectedDat[7]);
+                    bundle2.putString("status", selectedDat[8]);
 
                     mTabHost = (FragmentTabHost)getActivity().findViewById(android.R.id.tabhost);
                     mTabHost.setup(getActivity(), ((AppCompatActivity)getActivity()).getSupportFragmentManager(), R.id.realtabcontent);
@@ -269,7 +270,7 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
                 }
 
                 break;
-            case R.id.editMember:
+            /*case R.id.editMember:
                 if(selectedDat != null) {
                     Bundle bundle3 = new Bundle();
                     bundle3.putString("uid", selectedDat[0]);
@@ -359,7 +360,7 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
                                 arg1.setBackgroundColor(Color.GREEN);
                                 // Toast.makeText(getActivity(), lstView_m.getItemAtPosition(position).toString(), Toast.LENGTH_LONG).show();
                                 for(int i = 0; i < fullDat.length; i++) {
-                                    if(fullDat[i][7].equals(lstView_m.getItemAtPosition(position).toString().substring(0,9))) {
+                                    if(fullDat[i][0].equals(lstView_m.getItemAtPosition(position).toString().substring(0,7))) {
                                         selectedDat = Arrays.copyOf(fullDat[i], fullDat[i].length);
                                         // Toast.makeText(getActivity(), selectedDat[6], Toast.LENGTH_LONG).show();
                                     }

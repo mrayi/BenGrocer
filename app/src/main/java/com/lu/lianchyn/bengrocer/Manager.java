@@ -85,6 +85,7 @@ public class Manager extends AppCompatActivity {
         ViewStaffFragment viewStaffFragment = (ViewStaffFragment)getSupportFragmentManager().findFragmentByTag("ViewStaff");
         EditStaffFragment editStaffFragment = (EditStaffFragment)getSupportFragmentManager().findFragmentByTag("EditStaff");
         AddMemberFragment addMemberFragment = (AddMemberFragment)getSupportFragmentManager().findFragmentByTag("AddMember");
+        ViewMemberFragment viewMemberFragment = (ViewMemberFragment)getSupportFragmentManager().findFragmentByTag("ViewMember");
         if(
                 (addStaffFragment != null && addStaffFragment.isVisible() && item.getItemId() == android.R.id.home) ||
                 (viewStaffFragment != null && viewStaffFragment.isVisible() && item.getItemId() == android.R.id.home)
@@ -104,7 +105,10 @@ public class Manager extends AppCompatActivity {
                     .setNegativeButton("No", null).show();
             return true;
         } else if(
-                (addMemberFragment != null && addMemberFragment.isVisible() && item.getItemId() == android.R.id.home)) {
+                (addMemberFragment != null && addMemberFragment.isVisible() && item.getItemId() == android.R.id.home) ||
+                        (viewMemberFragment != null && viewMemberFragment.isVisible() && item.getItemId() == android.R.id.home)
+
+                ) {
             rebuild_m();
             return true;
         }
@@ -117,6 +121,7 @@ public class Manager extends AppCompatActivity {
         ViewStaffFragment viewStaffFragment = (ViewStaffFragment)getSupportFragmentManager().findFragmentByTag("ViewStaff");
         EditStaffFragment editStaffFragment = (EditStaffFragment)getSupportFragmentManager().findFragmentByTag("EditStaff");
         AddMemberFragment addMemberFragment = (AddMemberFragment)getSupportFragmentManager().findFragmentByTag("AddMember");
+        ViewMemberFragment viewMemberFragment = (ViewMemberFragment)getSupportFragmentManager().findFragmentByTag("ViewMember");
         if(
                 (addStaffFragment != null && addStaffFragment.isVisible()) ||
                 (viewStaffFragment != null && viewStaffFragment.isVisible())
@@ -135,7 +140,10 @@ public class Manager extends AppCompatActivity {
                     })
                     .setNegativeButton("No", null).show();
             return;
-        } else if((addMemberFragment != null && addMemberFragment.isVisible())) {
+        } else if(
+                (addMemberFragment != null && addMemberFragment.isVisible()) ||
+                (viewMemberFragment != null && viewMemberFragment.isVisible())
+                ) {
             rebuild_m();
             return;
         }
