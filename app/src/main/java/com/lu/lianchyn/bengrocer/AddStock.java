@@ -1,5 +1,6 @@
 package com.lu.lianchyn.bengrocer;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -73,7 +74,8 @@ public class AddStock extends AppCompatActivity {
                         Qtty.getText() == null || priceEdit.getText() == null ||
                         quantity == 0 || price == 0 ||
                         category == null || category.isEmpty() ||
-                        supplier == null || supplier.isEmpty()){
+                        supplier == null || supplier.isEmpty())
+                {
                     Toast.makeText(AddStock.this, "All fields are required.", Toast.LENGTH_LONG).show();
 
                 }else {
@@ -95,12 +97,14 @@ public class AddStock extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void evoid) {
                             Toast.makeText(AddStock.this, "Item added to Stock", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(AddStock.this, StockActivity.class);
+                            finish();
+                            startActivity(intent);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             String error = e.getMessage();
-
                             Toast.makeText(AddStock.this, "Error to add stock: " + error, Toast.LENGTH_SHORT).show();
                         }
                     });
