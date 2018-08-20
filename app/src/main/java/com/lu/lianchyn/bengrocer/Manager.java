@@ -116,6 +116,7 @@ public class Manager extends AppCompatActivity {
         AddStaffFragment addStaffFragment = (AddStaffFragment)getSupportFragmentManager().findFragmentByTag("AddStaff");
         ViewStaffFragment viewStaffFragment = (ViewStaffFragment)getSupportFragmentManager().findFragmentByTag("ViewStaff");
         EditStaffFragment editStaffFragment = (EditStaffFragment)getSupportFragmentManager().findFragmentByTag("EditStaff");
+        AddMemberFragment addMemberFragment = (AddMemberFragment)getSupportFragmentManager().findFragmentByTag("AddMember");
         if(
                 (addStaffFragment != null && addStaffFragment.isVisible()) ||
                 (viewStaffFragment != null && viewStaffFragment.isVisible())
@@ -133,6 +134,9 @@ public class Manager extends AppCompatActivity {
                         }
                     })
                     .setNegativeButton("No", null).show();
+            return;
+        } else if((addMemberFragment != null && addMemberFragment.isVisible())) {
+            rebuild_m();
             return;
         }
         new AlertDialog.Builder(this)
