@@ -8,7 +8,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".PosFragment"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:configChanges="orientation|keyboardHidden|screenSize"
+    android:windowSoftInputMode="stateUnchanged|adjustPan">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -210,7 +212,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_weight="1"
-            android:text="@string/ItemQuantity" />
+            android:text="@string/ItemQuantity"
+            android:textAlignment="textEnd" />
 
         <TextView
             android:id="@+id/textViewPrice"
@@ -218,7 +221,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_weight="2"
-            android:text="@string/Price" />
+            android:text="@string/Price1"
+            android:textAlignment="textEnd" />
 
         <TextView
             android:id="@+id/textViewSubTotal"
@@ -226,7 +230,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_weight="2"
-            android:text="@string/SubTotal" />
+            android:text="@string/SubTotal"
+            android:textAlignment="textEnd" />
     </LinearLayout>
 
     <ListView
@@ -264,7 +269,9 @@
             android:layout_weight="2"
             android:ems="10"
             android:hint="@string/InsertItemID"
-            android:inputType="number" />
+            android:inputType="number"
+            android:nextFocusDown="@id/editTextQuantity"
+            />
 
         <EditText
             android:id="@+id/editTextQuantity"
@@ -273,14 +280,15 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="@string/Quantity"
-            android:inputType="number" />
+            android:inputType="number"
+            android:imeOptions="actionDone"/>
 
         <Button
             android:id="@+id/buttonInsertItem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/Insert" />
+            android:text="@string/Barcode" />
 
     </LinearLayout>
 
@@ -319,14 +327,26 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="403dp" />
 
-        <EditText
-            android:id="@+id/editTextPayAmount"
+        <Button
+            android:id="@+id/buttonAdd"
+            style="?android:attr/buttonBarStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:ems="10"
-            android:hint="@string/userPayAmount"
-            android:inputType="numberDecimal" />
+            android:layout_weight="2"
+            android:text="@string/Add"
+            android:textColor="@android:color/holo_green_light"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/buttonRemove"
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/Remove"
+            android:textColor="@android:color/holo_red_light"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -351,25 +371,14 @@
             android:textColor="@android:color/holo_blue_light"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/buttonAdd"
-            style="?android:attr/buttonBarStyle"
+        <EditText
+            android:id="@+id/editTextPayAmount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/Add"
-            android:textColor="@android:color/holo_green_light"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/buttonRemove"
-            style="?android:attr/buttonBarStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/Remove"
-            android:textColor="@android:color/holo_red_light"
-            android:textStyle="bold" />
+            android:layout_weight="2"
+            android:ems="10"
+            android:hint="@string/userPayAmount"
+            android:inputType="numberDecimal" />
 
         <Button
             android:id="@+id/buttonPay"

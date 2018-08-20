@@ -63,12 +63,13 @@
     <string name="Insert">Insert</string>
     <string name="Total">Total:</string>
     <string name="InsertItemID">Insert Item ID</string>
-    <string name="Quantity">Quantity</string>
     <string name="ItemID">Item ID</string>
     <string name="ItemName">Item Name</string>
     <string name="ItemQuantity">Qty</string>
-    <string name="Price">Price (RM)</string>
+    <string name="Price1">Price (RM)</string>
     <string name="SubTotal">Sub Total</string>
     <string name="userPayAmount">User Pay Amount</string>
     <string name="RM">(RM)</string>
+    <string name="Save">Save</string>
+    <string name="Delete">Delete</string>
 </resources>

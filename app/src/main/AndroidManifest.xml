@@ -16,9 +16,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Manager" />
+        <activity android:name=".Manager"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="stateUnchanged|adjustPan"/>
         <activity android:name=".InventoryStaff" />
-        <activity android:name=".Cashier" />
+        <activity android:name=".Cashier"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="stateUnchanged|adjustPan"/>
         <activity android:name=".Profile" />
         <activity android:name=".AboutUs" />
         <activity android:name=".ChangePassword" />
@@ -27,10 +31,11 @@
             android:name=".StockMgmt"
             android:label="@string/title_activity_stock_mgmt"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".StockActivity"
-            ></activity>
-        <activity android:name=".AddStock"
-            android:parentActivityName=".StockActivity"></activity>
+        <activity android:name=".StockActivity" />
+        <activity
+            android:name=".AddStock"
+            android:parentActivityName=".StockActivity" />
+        <activity android:name=".EditActivity"></activity>
     </application>
 
 </manifest>
